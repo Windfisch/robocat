@@ -85,32 +85,40 @@ module servo_at_horn() {
 
 //!servo_horn();
 
-
 difference() {
-	hull() {
-		translate([-8.5 - 5.5, -15, 10])
-			rotate([0,90,0]) cylinder(5.5 + 2, d=12);
-//		translate([-8.5 - 5.5, 8, 10])
-//			rotate([0,90,0]) cylinder(5.5 + 2, d=12);
-	translate([-8.5-5.5, -2, 0.01])
-		cube([5.5+2, 12.2+2+2, 17.3+2.5]);
+    union() {
+        difference() {
+            hull() {
+                translate([-8.5 - 5.5, -15, 10])
+                    rotate([0,90,0]) cylinder(5.5 + 2, d=12);
+        //		translate([-8.5 - 5.5, 8, 10])
+        //			rotate([0,90,0]) cylinder(5.5 + 2, d=12);
+            translate([-8.5-5.5, -2, 0.01])
+                cube([5.5+2, 12.2+2+2, 17.3+2.5]);
 
-	}
-	translate([-8.5, -15, 10])
-		rotate([-90,0,90]) servo_horn_slidein();
-}
+            }
+            translate([-8.5, -15, 10])
+                rotate([-90,0,90]) servo_horn_slidein();
+        }
 
-difference() {
-	translate([-5 - 2, -2, 0.01])
-		cube([32.3+2+2, 12.2+2+2, 17.3+2.5]);
-	servo_slidein();
+        difference() {
+            translate([-5 - 2, -2, 0.01])
+                cube([32.3+2+2, 12.2+2+2, 17.3+2.5]);
+            servo_slidein();
+        }
+    }
+    linear_extrude(999) polygon([
+       [-19,0],
+        [0, 19],
+        [-99,99]
+    ]);
 }
 
 /*color("blue", 0.2) servo();
 translate([-8.5, -15, 10]) rotate([-90,0,90]) {
 	color("white", 0.4) servo_horn();
 	color("blue", 0.2) rotate([0,0,180-45]) servo_at_horn();
-}*/
-	
+}
+	*/
 
 
