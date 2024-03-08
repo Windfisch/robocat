@@ -18,16 +18,56 @@ class Servo:
 	def __init__(self, pin, center, offset90):
 		self.center = center
 		self.offset90 = offset90
-		self.pin = machine.PWM(pin, freq = 200, duty_ns = center * 1000)
+		self.pin = pin
+		self.pwm = None
+		self.duty_ns = center * 1000
+	
+	def enable(self):
+		self.pwm = machine.PWM(self.pin, freq = 200, duty_ns = self.duty_ns)
+	
+	def is_enabled(self):
+		return self.pwm is not None
 	
 	def set_angle(self, angle):
-		self.pin.duty_ns(int((self.center + angle / 90 * self.offset90) * 1000))
+		self.duty_ns = int((self.center + angle / 90 * self.offset90) * 1000)
+		if self.pwm is not None:
+			self.pwm.duty_ns(self.duty_ns)
+
+class ServoSafetyControllerProxy:
+	def __init__(self, servo_safety_controller, index):
+		self.servo_safety_controller = servo_safety_controller
+		self.index = index
+	
+	def set_angle(self, angle):
+		self.servo_safety_controller.set_angle(self.index, angle)
+
+class ServoSafetyController:
+	def __init__(self, servos):
+		self.servos = servos
+		self.next_servo_powerup_time = time.ticks_ms()
+		self.n_servos_powered = 0
+		self.proxies = [ServoSafetyControllerProxy(self, i) for i in range(len(servos))]
+	
+	def set_angle(self, servo, angle):
+		self.servos[servo].set_angle(angle)
+	
+	def loop(self):
+		now = time.ticks_ms()
+		time_until_next = time.ticks_diff(self.next_servo_powerup_time, now)
+
+		if self.n_servos_powered < len(self.servos) and time_until_next <= 0:
+			self.servos[self.n_servos_powered].enable()
+			self.n_servos_powered += 1
+			self.next_servo_powerup_time = time.ticks_add(now, 100)
 
 class Leg:
 	def __init__(self, shoulder, upper, knee, shoulder_sign, upper_sign, knee_sign, side):
-		self.shoulder = Servo(shoulder, 1500, shoulder_sign * 1000)
-		self.upper = Servo(upper, 1500, upper_sign * 1000)
-		self.knee = Servo(knee, 1500, knee_sign * 1000)
+		self.upper_sign = upper_sign
+		self.knee_sign = knee_sign
+		self.shoulder_sign = shoulder_sign
+		self.shoulder = shoulder
+		self.upper = upper
+		self.knee = knee
 		self.side = side
 
 	def pos(self, x, y, z):
@@ -80,17 +120,17 @@ class Leg:
 		knee = clamp(knee, -90, 90)
 		#print(shoulder, upper, knee)
 
-		self.shoulder.set_angle(shoulder)
-		self.upper.set_angle(upper)
-		self.knee.set_angle(knee)
+		self.shoulder.set_angle(shoulder * self.shoulder_sign)
+		self.upper.set_angle(upper * self.upper_sign)
+		self.knee.set_angle(knee * self.knee_sign)
 
+ctrl = ServoSafetyController([Servo(i, 1500, 1000) for i in range(12)])
+s = ctrl.proxies
 
-
-
-leg_fl = Leg(11, 9, 10, 1, -1, 1, FRONT)
-leg_fr = Leg(5, 3, 4, 1, 1, -1, FRONT)
-leg_rl = Leg(8, 7, 6, -1, -1, 1, REAR)
-leg_rr = Leg(2, 0, 1, -1, 1, -1, REAR)
+leg_fl = Leg(s[11], s[9], s[10], 1, -1, 1, FRONT)
+leg_fr = Leg(s[5], s[3], s[4], 1, 1, -1, FRONT)
+leg_rl = Leg(s[8], s[7], s[6], -1, -1, 1, REAR)
+leg_rr = Leg(s[2], s[0], s[1], -1, 1, -1, REAR)
 
 legs = [leg_fl, leg_fr, leg_rl, leg_rr]
 
@@ -104,6 +144,7 @@ def twerk(ax = 25, ay = 25, az = 30, dt_ms = 50):
 		y = cos(t/1250*2*pi) * ay
 		z = -120 +az/2 - az/2*cos(t/7500*2*pi)
 		pos(x,y,z)
+		ctrl.loop()
 		time.sleep(dt_ms / 1000)
 
 print("hello")
