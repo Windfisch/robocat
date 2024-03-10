@@ -1,6 +1,7 @@
 import machine
 from math import sin, cos, tan, atan, atan2, pi, sqrt, asin, acos
 import time
+import json
 
 #pins = [machine.PWM(i, freq = 200, duty_ns = 1500_000) for i in range(12)]
 
@@ -147,6 +148,81 @@ def twerk(ax = 25, ay = 25, az = 30, dt_ms = 50):
 		ctrl.loop()
 		time.sleep(dt_ms / 1000)
 
+def get_up(dt_ms = 25):
+	for t in range(0,1500, dt_ms):
+		hf = 0
+		hr = 0
+		leg_fl.pos(21,0,-50-hf)
+		leg_fr.pos(21,0,-50-hf)
+		leg_rl.pos(-21,0,-50-hr)
+		leg_rr.pos(-21,0,-50-hr)
+		ctrl.loop()
+		time.sleep(dt_ms / 1000)
+	for t in range(0,1500, dt_ms):
+		hf = 0
+		hr = t / 1500 * 70
+		leg_fl.pos(21,0,-50-hf)
+		leg_fr.pos(21,0,-50-hf)
+		leg_rl.pos(-21,0,-50-hr)
+		leg_rr.pos(-21,0,-50-hr)
+		ctrl.loop()
+		time.sleep(dt_ms / 1000)
+	for t in range(0,1500, dt_ms):
+		hf = t / 1500 * 70
+		hr = 70
+		leg_fl.pos(21,0,-50-hf)
+		leg_fr.pos(21,0,-50-hf)
+		leg_rl.pos(-21,0,-50-hr)
+		leg_rr.pos(-21,0,-50-hr)
+		ctrl.loop()
+		time.sleep(dt_ms / 1000)
+	for t in range(0,1500, dt_ms):
+		hf = 70 - t / 1500 * 70
+		hr = 70 - t / 1500 * 70
+		leg_fl.pos(21,0,-50-hf)
+		leg_fr.pos(21,0,-50-hf)
+		leg_rl.pos(-21,0,-50-hr)
+		leg_rr.pos(-21,0,-50-hr)
+		ctrl.loop()
+		time.sleep(dt_ms / 1000)
+
+def walk(dt_ms = 25):
+	h = -120
+	step_h = 30
+	step_len = 50
+
+	step_dur = 1500
+	for t in range(0,15000, dt_ms):
+		
+		tt = (t / step_dur) % 4.0
+		leg = int(tt)
+		phase = tt % 1.0
+
+		xs = [-step_len/2] * 4
+		zs = [0] * 4
+
+		for i in range(0, leg):
+			xs[i] += step_len
+
+		xs[leg] = -step_len/2 * cos(phase * pi)
+		zs[leg] = step_h * sin(phase * pi)
+
+		#xmid = sum(xs)/4
+		#zmid = sum(zs)/4
+		#for i in range(4):
+		#	xs[i] -= xmid
+		#	zs[i] -= zmid
+		for i in range(4):
+			xs[i] -= tt / 4 * step_len
+
+		for l, x, z in zip([leg_fr, leg_rl, leg_fl, leg_rr], xs, zs):
+			l.pos(x, 0, z + h)
+
+		ctrl.loop()
+		time.sleep(dt_ms / 1000)
 print("hello")
 
-twerk(dt_ms=25)
+#twerk(dt_ms=25)
+#get_up(dt_ms=25)
+
+walk()
