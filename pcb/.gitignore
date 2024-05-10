@@ -1,0 +1,10 @@
+*.000
+*.bak
+*.kicad_pcb-bak
+*.kicad_sch-bak
+*.kicad_prl
+_autosave-*
+*.lck
+fp-info-cache
+*-backups/
+\#auto_saved_files\#
