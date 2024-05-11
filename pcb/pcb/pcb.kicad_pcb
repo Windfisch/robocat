@@ -74,9 +74,9 @@
 			(subtractmaskfromsilk no)
 			(outputformat 1)
 			(mirror no)
-			(drillshape 1)
+			(drillshape 0)
 			(scaleselection 1)
-			(outputdirectory "")
+			(outputdirectory "fab/")
 		)
 	)
 	(net 0 "")
@@ -11962,7 +11962,7 @@
 				(type default)
 			)
 			(layer "F.CrtYd")
-			(net 129)
+			(net 128)
 			(uuid "282e6516-f49b-41e6-9173-083ea64c441c")
 		)
 		(fp_line
@@ -23512,17 +23512,89 @@
 		(layer "F.SilkS")
 		(uuid "f9fc57bd-960c-4f1b-a078-e2ecd8fcb530")
 	)
-	(gr_rect
-		(start -45 -26)
-		(end 45 44)
-		(locked yes)
+	(gr_line
+		(start 45 -22.5)
+		(end 45 40.5)
 		(stroke
 			(width 0.15)
 			(type default)
 		)
-		(fill none)
 		(layer "Edge.Cuts")
-		(uuid "2c091dde-4174-4736-9e0e-04edf76a300d")
+		(uuid "32d6dd15-25e8-47b6-8521-50c019a2376b")
+	)
+	(gr_line
+		(start 41.5 44)
+		(end -41.5 44)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "37bd62be-ad9f-4e59-9680-b6afaf4abc8b")
+	)
+	(gr_line
+		(start -45 40.5)
+		(end -45 -22.5)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "8e388bba-6818-468b-ae49-0e9796a58199")
+	)
+	(gr_arc
+		(start 45 40.5)
+		(mid 43.974874 42.974874)
+		(end 41.5 44)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "9063347d-6aa0-4c9a-be0f-94af6e8aa5f5")
+	)
+	(gr_arc
+		(start -41.5 44)
+		(mid -43.974874 42.974874)
+		(end -45 40.5)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "aefb5f54-2d43-43c9-845e-2f7e83429650")
+	)
+	(gr_arc
+		(start 41.5 -26)
+		(mid 43.974874 -24.974874)
+		(end 45 -22.5)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "bd437249-20a7-4497-8a62-7973b8f00b9d")
+	)
+	(gr_arc
+		(start -45 -22.5)
+		(mid -43.974874 -24.974874)
+		(end -41.5 -26)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "c7cd96e4-5797-4f4e-9718-7c41c96ea7ea")
+	)
+	(gr_line
+		(start -41.5 -26)
+		(end 41.5 -26)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "d2f8562e-79e2-4e10-8ca1-09a9dd07b649")
 	)
 	(gr_text "JLCJLCJLCJLC"
 		(at -26.035 42.672 -0)
@@ -23764,7 +23836,7 @@
 			(justify left bottom)
 		)
 	)
-	(gr_text "https://github.com/Windfisch/robocat\nTODO REVISION"
+	(gr_text "https://github.com/Windfisch/robocat\ntag: pcb_rev01, commit: 56e3158"
 		(at 41.783 29.718 90)
 		(layer "F.SilkS")
 		(uuid "91456203-835a-4a76-b228-f91558a34ae1")
