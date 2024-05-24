@@ -24,7 +24,77 @@ set_defaults(black_edges=True, render_joints=True, render_edges=True, reset_came
 
 # %%
 
+def servo():
+    body_xlen = 23
+    body_ylen = 12.5
+    body_zlen = 24
+    
+    hole_xdist = 27.7
 
+    flange_xlen = 34
+    flange_zlen = 2.5
+    flange_zdist_bottom = 17.3
+
+    axis_offcenter = 5.5
+
+    result = extrude(Rect(body_xlen, body_ylen), body_zlen)
+    flange = extrude(
+        Rect(flange_xlen, body_ylen)
+        - Loc((-hole_xdist/2,0)) * (Circle(3/2) + Rect(99, 1.2, align=HC))
+        - Loc((+hole_xdist/2,0)) * (Circle(3/2) + Rect(99, 1.2, align=LC)),
+        flange_zlen
+    )
+    flange = Loc((0,0,flange_zdist_bottom)) * flange
+    result += flange
+
+    topaxis = Plane(Loc((-axis_offcenter,0,0)) * result.faces().sort_by(Axis.Z)[-1].center_location)
+
+    result += extrude( topaxis * Circle(11.15/2), 4)
+    result += extrude( topaxis * Circle(5/2), 6.5)
+    result += extrude( topaxis * Loc((11.15/2 + 3.35,0)) * Circle(2.75, align=HC), 4)
+
+    RigidJoint("mount", result, flange.faces().sort_by(Axis.Z)[-1].center_location)
+    RevoluteJoint("horn_master", result, Axis(result.faces().sort_by(Axis.Z)[-1].center_location.position, (0,0,1)))
+    RigidJoint("horn_slave", result, result.faces().sort_by(Axis.Z)[-1].center_location)
+
+    result.name="sg90 servo"
+    result.color="#5599ffb0"
+
+    return result
+
+def servo_horn():
+    xlen = 36
+
+    end_r = 2
+    mid_r = 7.5 / 2
+
+    base = Circle(mid_r) + Loc((-xlen/2 +end_r,0)) * Circle(end_r) + Loc((xlen/2-end_r,0)) * Circle(end_r)
+    base = make_hull(base.edges())
+    
+    hole_spacing = 2.5
+    outer_hole_dist = 32
+    hole_diam = 1.3
+    n_holes = 5
+
+    for i in range(n_holes):
+        base -= Loc((outer_hole_dist/2 - i * hole_spacing,0)) * Circle(hole_diam/2)
+        base -= Loc((-outer_hole_dist/2 + i * hole_spacing,0)) * Circle(hole_diam/2)
+    
+    base -= Circle(1.2)
+    
+    result = extrude(base, 2)
+    pos = (0,0,1)
+    RigidJoint('slave', result, Loc(pos, (0,0,1)))
+    RevoluteJoint('master', result, Axis(pos, (0,0,1)))
+    RigidJoint('mount', result, Loc((0,0,2), (0,0,0)))
+
+    result.name = "servo horn"
+    result.color = "#ffffffd0"
+
+    return result
+
+
+# %%
 
 BURN_WIDTH=0.15
 THICK = 3.1
@@ -106,6 +176,31 @@ def auto_finger_joint(
     else:
         return (a - fingers_a, b - fingers_b)
 
+def laserify(solid):
+    if isinstance(solid, list):
+        return [laserify(s) for s in solid]
+
+    faces = solid.faces().sort_by(SortBy.AREA)
+    top = faces[-1]
+    bot = faces[-2]
+    thick = (top.center_location.inverse() * bot.center_location).position.Z
+    sec = section(solid, section_by = Plane(top.center_location), height=thick/2)
+    sec = top.center_location.inverse() * sec
+
+    sec = offset(sec, amount=BURN_WIDTH/2)
+
+    return sec
+
+def arrange1d(solids):
+    x = 0
+    result = []
+    for s in solids:
+        print(s)
+        bb = s.bounding_box(1)
+        result.append(Loc((x - bb.min.X, -bb.min.Y)) * s)
+        x += bb.max.X - bb.min.X + 1
+    return result
+
 
 def make_horn_cutout():
     holes = Location((-8.5,0)) * SlotCenterToCenter(1.3, 2.1)
@@ -114,6 +209,77 @@ def make_horn_cutout():
     holes += Location((0,-7)) * rot2d(90) * SlotCenterToCenter(1.3, 2.1)
     holes += RRect(10, 7.7, 1)
     return holes
+
+# %%
+
+def make_body():
+    LENGTH = 150
+    LENGTH2 = LENGTH+80
+    sec1a = Loc((30/2,0,0)) * (
+        Box(THICK,LENGTH,40, align=CCH)
+        - Loc((0,-LENGTH/2,0)) * Box(THICK,10,THICK, align=CLH)
+        - Loc((0,LENGTH/2,0)) * Box(THICK,10,THICK, align=CHH)
+    )
+    sec1b = Loc((-30/2,0,0)) * (
+        Box(THICK,LENGTH,40, align=CCH)
+        - Loc((0,-LENGTH/2,0)) * Box(THICK,10,THICK, align=CLH)
+        - Loc((0,LENGTH/2,0)) * Box(THICK,10,THICK, align=CHH)
+    )
+    top = (
+        Box(120,LENGTH2,THICK, align=CCH)
+        - Box(27,110,THICK, align=CCH)
+        - Loc((120/2, LENGTH2/2, 0)) * Box(43,40,THICK, align=HHH)
+        - Loc((120/2, -LENGTH2/2, 0)) * Box(43,40,THICK, align=HLH)
+        - Loc((-120/2, LENGTH2/2, 0)) * Box(43,40,THICK, align=LHH)
+        - Loc((-120/2, -LENGTH2/2, 0)) * Box(43,40,THICK, align=LLH)
+    )
+    sec3 = Loc((0,-LENGTH/2,0)) * (
+        Box(120,THICK,25, align=CLH)
+        +Box(33,THICK,40, align=CLH)
+        -Rot((90,0,0))*extrude(Loc((42,-12)) * make_horn_cutout(), -THICK)
+        -Rot((90,0,0))*extrude(Loc((-42,-12)) * make_horn_cutout(), -THICK)
+    )
+    sec4 = Loc((0,LENGTH/2,0)) * (
+        Box(120,THICK,25, align=CHH)
+        +Box(33,THICK,40, align=CHH)
+        -Rot((90,0,0))*extrude(Loc((42,-12)) * make_horn_cutout(), THICK)
+        -Rot((90,0,0))*extrude(Loc((-42,-12)) * make_horn_cutout(), THICK)
+    )
+    #sec3 = Loc((0,-LENGTH/2,0)) * Box(120,THICK,40, align=CLH)
+    #sec4 = Loc((0,LENGTH/2,0)) * Box(120,THICK,40, align=CHH)
+    bottom = Loc((0,0,-40)) * Box(33, 80, 3, align=CCL)
+
+    sec1a, top = auto_finger_joint(sec1a, top, 12)
+    sec1a, sec3 = auto_finger_joint(sec1a, sec3, 5)
+    sec1b, top = auto_finger_joint(sec1b, top, 12)
+    sec1b, sec3 = auto_finger_joint(sec1b, sec3, 5)
+    top, sec3 = auto_finger_joint(top, sec3, 12)
+    sec1a, sec4 = auto_finger_joint(sec1a, sec4, 5)
+    sec1b, sec4 = auto_finger_joint(sec1b, sec4, 5)
+    top, sec4 = auto_finger_joint(top, sec4, 12)
+    sec1a, bottom = auto_finger_joint(sec1a, bottom, 12)
+    sec1b, bottom = auto_finger_joint(sec1b, bottom, 12)
+
+    head=Loc((0,-LENGTH/2 - 40, 30))* Sphere(40)
+
+    solids = [sec1a, sec1b, top, sec3, sec4, bottom]
+
+
+    joints = [
+        RigidJoint("horn", sec3, Loc((42,-LENGTH/2, -12), (-90,0,0))),
+        RigidJoint("horn2", sec3, Loc((-42,-LENGTH/2, -12), (-90,0,0))),
+        RigidJoint("horn3", sec4, Loc((42,LENGTH/2, -12), (-90,180,0))),
+        RigidJoint("horn4", sec4, Loc((-42,LENGTH/2, -12), (-90,180,0))),
+    ]
+
+    return solids, joints
+
+body_solids, body_joints = make_body()
+
+show(body_solids)
+
+# %%
+
 
 
 def servo_horn_mount():
@@ -196,74 +362,34 @@ def tri():
     return tri
 
 
-def servo():
-    body_xlen = 23
-    body_ylen = 12.5
-    body_zlen = 24
-    
-    hole_xdist = 27.7
 
-    flange_xlen = 34
-    flange_zlen = 2.5
-    flange_zdist_bottom = 17.3
+hip_lower = servo_horn_mount()
+hip_upper = Rot((90,0,90)) * servo_hip_mount()
+hip_tri1 = tri()
+hip_tri2 = tri()
 
-    axis_offcenter = 5.5
+servo1 = servo()
+servo2 = servo()
+horn1 = servo_horn()
+horn_top = servo_horn()
 
-    result = extrude(Rect(body_xlen, body_ylen), body_zlen)
-    flange = extrude(
-        Rect(flange_xlen, body_ylen)
-        - Loc((-hole_xdist/2,0)) * (Circle(3/2) + Rect(99, 1.2, align=HC))
-        - Loc((+hole_xdist/2,0)) * (Circle(3/2) + Rect(99, 1.2, align=LC)),
-        flange_zlen
-    )
-    flange = Loc((0,0,flange_zdist_bottom)) * flange
-    result += flange
+knee_servo = servo()
+knee_horn = servo_horn()
 
-    topaxis = Plane(Loc((-axis_offcenter,0,0)) * result.faces().sort_by(Axis.Z)[-1].center_location)
 
-    result += extrude( topaxis * Circle(11.15/2), 4)
-    result += extrude( topaxis * Circle(5/2), 6.5)
-    result += extrude( topaxis * Loc((11.15/2 + 3.35,0)) * Circle(2.75, align=HC), 4)
+# %%
+body_joints[0].connect_to(horn_top.joints['mount'])
 
-    RigidJoint("mount", result, flange.faces().sort_by(Axis.Z)[-1].center_location)
-    RevoluteJoint("horn_master", result, Axis(result.faces().sort_by(Axis.Z)[-1].center_location.position, (0,0,1)))
-    RigidJoint("horn_slave", result, result.faces().sort_by(Axis.Z)[-1].center_location)
+horn_top.joints['master'].connect_to(servo1.joints['horn_slave'], angle=180)
+servo1.joints['mount'].connect_to(hip_upper.joints['servo'])
+hip_upper.joints['attach'].connect_to(hip_lower.joints['hip_servo_mount'])
+hip_lower.joints['knee_servo_horn'].connect_to(horn1.joints['mount'], angle=0)
 
-    result.name="sg90 servo"
-    result.color="#5599ffb0"
+hip_upper.joints['tri1'].connect_to(hip_tri1.joints['attach'])
+hip_upper.joints['tri2'].connect_to(hip_tri2.joints['attach'])
 
-    return result
+# %%
 
-def servo_horn():
-    xlen = 36
-
-    end_r = 2
-    mid_r = 7.5 / 2
-
-    base = Circle(mid_r) + Loc((-xlen/2 +end_r,0)) * Circle(end_r) + Loc((xlen/2-end_r,0)) * Circle(end_r)
-    base = make_hull(base.edges())
-    
-    hole_spacing = 2.5
-    outer_hole_dist = 32
-    hole_diam = 1.3
-    n_holes = 5
-
-    for i in range(n_holes):
-        base -= Loc((outer_hole_dist/2 - i * hole_spacing,0)) * Circle(hole_diam/2)
-        base -= Loc((-outer_hole_dist/2 + i * hole_spacing,0)) * Circle(hole_diam/2)
-    
-    base -= Circle(1.2)
-    
-    result = extrude(base, 2)
-    pos = (0,0,1)
-    RigidJoint('slave', result, Loc(pos, (0,0,1)))
-    RevoluteJoint('master', result, Axis(pos, (0,0,1)))
-    RigidJoint('mount', result, Loc((0,0,2), (0,0,0)))
-
-    result.name = "servo horn"
-    result.color = "#ffffffd0"
-
-    return result
 
 def upper_leg():
     leg = SlotCenterToCenter(60, 20)
@@ -286,136 +412,12 @@ def lower_leg():
 
     return leg
 
-hip_lower = servo_horn_mount()
-hip_upper = Rot((90,0,90)) * servo_hip_mount()
-hip_tri1 = tri()
-hip_tri2 = tri()
 
-servo1 = servo()
-servo2 = servo()
-horn1 = servo_horn()
-horn_top = servo_horn()
-
-knee_servo = servo()
-knee_horn = servo_horn()
 uleg = upper_leg()
 lleg = lower_leg()
 
 
-def make_body():
-    LENGTH = 150
-    LENGTH2 = LENGTH+80
-    sec1a = Loc((30/2,0,0)) * (
-        Box(THICK,LENGTH,40, align=CCH)
-        - Loc((0,-LENGTH/2,0)) * Box(THICK,10,THICK, align=CLH)
-        - Loc((0,LENGTH/2,0)) * Box(THICK,10,THICK, align=CHH)
-    )
-    sec1b = Loc((-30/2,0,0)) * (
-        Box(THICK,LENGTH,40, align=CCH)
-        - Loc((0,-LENGTH/2,0)) * Box(THICK,10,THICK, align=CLH)
-        - Loc((0,LENGTH/2,0)) * Box(THICK,10,THICK, align=CHH)
-    )
-    top = (
-        Box(120,LENGTH2,THICK, align=CCH)
-        - Box(27,110,THICK, align=CCH)
-        - Loc((120/2, LENGTH2/2, 0)) * Box(43,40,THICK, align=HHH)
-        - Loc((120/2, -LENGTH2/2, 0)) * Box(43,40,THICK, align=HLH)
-        - Loc((-120/2, LENGTH2/2, 0)) * Box(43,40,THICK, align=LHH)
-        - Loc((-120/2, -LENGTH2/2, 0)) * Box(43,40,THICK, align=LLH)
-    )
-    sec3 = Loc((0,-LENGTH/2,0)) * (
-        Box(120,THICK,25, align=CLH)
-        +Box(33,THICK,40, align=CLH)
-        -Rot((90,0,0))*extrude(Loc((42,-12)) * make_horn_cutout(), -THICK)
-        -Rot((90,0,0))*extrude(Loc((-42,-12)) * make_horn_cutout(), -THICK)
-    )
-    sec4 = Loc((0,LENGTH/2,0)) * (
-        Box(120,THICK,25, align=CHH)
-        +Box(33,THICK,40, align=CHH)
-        -Rot((90,0,0))*extrude(Loc((42,-12)) * make_horn_cutout(), THICK)
-        -Rot((90,0,0))*extrude(Loc((-42,-12)) * make_horn_cutout(), THICK)
-    )
-    #sec3 = Loc((0,-LENGTH/2,0)) * Box(120,THICK,40, align=CLH)
-    #sec4 = Loc((0,LENGTH/2,0)) * Box(120,THICK,40, align=CHH)
-    bottom = Loc((0,0,-40)) * Box(33, 80, 3, align=CCL)
 
-    sec1a, top = auto_finger_joint(sec1a, top, 12)
-    sec1a, sec3 = auto_finger_joint(sec1a, sec3, 5)
-    sec1b, top = auto_finger_joint(sec1b, top, 12)
-    sec1b, sec3 = auto_finger_joint(sec1b, sec3, 5)
-    top, sec3 = auto_finger_joint(top, sec3, 12)
-    sec1a, sec4 = auto_finger_joint(sec1a, sec4, 5)
-    sec1b, sec4 = auto_finger_joint(sec1b, sec4, 5)
-    top, sec4 = auto_finger_joint(top, sec4, 12)
-    sec1a, bottom = auto_finger_joint(sec1a, bottom, 12)
-    sec1b, bottom = auto_finger_joint(sec1b, bottom, 12)
-
-    head=Loc((0,-LENGTH/2 - 40, 30))* Sphere(40)
-
-    solids = [sec1a, sec1b, top, sec3, sec4, bottom]
-
-
-    joints = [
-        RigidJoint("horn", sec3, Loc((42,-LENGTH/2, -12), (-90,0,0))),
-        RigidJoint("horn2", sec3, Loc((-42,-LENGTH/2, -12), (-90,0,0))),
-        RigidJoint("horn3", sec4, Loc((42,LENGTH/2, -12), (-90,180,0))),
-        RigidJoint("horn4", sec4, Loc((-42,LENGTH/2, -12), (-90,180,0))),
-    ]
-
-    return solids, joints
-
-body_solids, body_joints = make_body()
-
-show(body_solids)
-
-
-def laserify(solid):
-    if isinstance(solid, list):
-        return [laserify(s) for s in solid]
-
-    faces = solid.faces().sort_by(SortBy.AREA)
-    top = faces[-1]
-    bot = faces[-2]
-    thick = (top.center_location.inverse() * bot.center_location).position.Z
-    sec = section(solid, section_by = Plane(top.center_location), height=thick/2)
-    sec = top.center_location.inverse() * sec
-
-    sec = offset(sec, amount=BURN_WIDTH/2)
-
-    return sec
-
-def arrange1d(solids):
-    x = 0
-    result = []
-    for s in solids:
-        print(s)
-        bb = s.bounding_box(1)
-        result.append(Loc((x - bb.min.X, -bb.min.Y)) * s)
-        x += bb.max.X - bb.min.X + 1
-    return result
-
-s = body_solids
-show( arrange1d(laserify(s)))
-#s.bounding_box().
-
-
-# %%
-
-show(body_solids)
-
-body_joints[0].connect_to(horn_top.joints['mount'])
-
-
-
-
-
-horn_top.joints['master'].connect_to(servo1.joints['horn_slave'], angle=180)
-servo1.joints['mount'].connect_to(hip_upper.joints['servo'])
-hip_upper.joints['attach'].connect_to(hip_lower.joints['hip_servo_mount'])
-hip_lower.joints['knee_servo_horn'].connect_to(horn1.joints['mount'], angle=0)
-
-hip_upper.joints['tri1'].connect_to(hip_tri1.joints['attach'])
-hip_upper.joints['tri2'].connect_to(hip_tri2.joints['attach'])
 
 horn1.joints['master'].connect_to(servo2.joints['horn_slave'], angle=180+45)
 servo2.joints['mount'].connect_to(uleg.joints['upper'])
