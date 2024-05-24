@@ -299,12 +299,22 @@ def servo_horn_mount():
         .vertices().sort_by(Axis.X)[-1]
     )
 
+    joint_point_bp = (
+        r.faces().filter_by(Plane.XZ).sort_by(Axis.Y)[-1]
+        .edges().filter_by(Axis.X).sort_by(Axis.Y)[-1]
+        .vertices().sort_by(Axis.X)[-1]
+    )
+
     print(joint_point)
 
     j1 = RevoluteJoint("knee_servo_horn", r, Axis((0,0,0), (0,0,1)))
     j2 = RigidJoint("hip_servo_mount", r, -Loc(joint_point, (0,0,180)))
+    j3 = RigidJoint("servo_backplate", r, -Loc(joint_point_bp, (0,0,0)))
 
     return r
+
+show(servo_horn_mount())
+# %%
 
 def make_servo_cutout():
     screw_spacing = 28
@@ -344,11 +354,12 @@ def servo_hip_mount():
 
 def tri():
     xlen = 30
-    ylen = 17
-    tol = 2
+    ylen = 23
+    tol = 3
     
     tri = (
-        Triangle(a=xlen-tol, c=ylen-tol, B = 90, align = LL)
+        Rect(xlen-tol, ylen-tol, align = LL)
+        #Triangle(a=xlen-tol, c=ylen-tol, B = 90, align = LL)
         + Rect(xlen-tol, THICK+tol, align=LH)
         + Rect(THICK+tol, ylen-tol, align = HL)
         + Rect(tol, tol, align = HH)
@@ -361,6 +372,11 @@ def tri():
 
     return tri
 
+
+axis_offcenter = 5.5
+
+backplate = extrude(Rect(24,25, align = LL) - Loc((24/2,12 + servo_xlen/2 - axis_offcenter)) * Circle(3.2 * sqrt(2) / 2 ) , 3) 
+RigidJoint("attach", backplate, Loc((0,0,0),(90,180,0)))
 
 
 hip_lower = servo_horn_mount()
@@ -377,7 +393,7 @@ knee_servo = servo()
 knee_horn = servo_horn()
 
 
-# %%
+
 body_joints[0].connect_to(horn_top.joints['mount'])
 
 horn_top.joints['master'].connect_to(servo1.joints['horn_slave'], angle=180)
@@ -385,8 +401,12 @@ servo1.joints['mount'].connect_to(hip_upper.joints['servo'])
 hip_upper.joints['attach'].connect_to(hip_lower.joints['hip_servo_mount'])
 hip_lower.joints['knee_servo_horn'].connect_to(horn1.joints['mount'], angle=0)
 
+hip_lower.joints['servo_backplate'].connect_to(backplate.joints['attach'])
+
 hip_upper.joints['tri1'].connect_to(hip_tri1.joints['attach'])
 hip_upper.joints['tri2'].connect_to(hip_tri2.joints['attach'])
+
+show([horn_top, servo1, hip_tri1, hip_tri2, hip_upper, hip_lower, backplate])
 
 # %%
 
@@ -439,6 +459,10 @@ hip_lower, hip_tri2 = finger(hip_lower, hip_tri2, 3, swap=False)
 hip_upper, hip_tri1 = finger(hip_upper, hip_tri1, 3, swap=True)
 hip_upper, hip_tri2 = finger(hip_upper, hip_tri2, 3, swap=True)
 
+hip_lower, backplate = finger(hip_lower, backplate, 3)
+hip_tri1, backplate = finger(hip_tri1, backplate, 3)
+hip_tri2, backplate = finger(hip_tri2, backplate, 3)
+
 hip_lower.color='red'
 hip_upper.color='blue'
 
@@ -447,7 +471,7 @@ hip_upper.name = 'hip_servo_mount'
 hip_tri1.name = 'tri1'
 hip_tri2.name = 'tri2'
 
-leg_assembly = [horn_top,hip_lower,hip_upper,hip_tri1,hip_tri2,servo1, servo2, knee_servo, uleg, horn1, knee_horn, lleg]
+leg_assembly = [horn_top,hip_lower,hip_upper,hip_tri1,hip_tri2,servo1, servo2, knee_servo, uleg, horn1, knee_horn, lleg, backplate]
 
 
 def my_mirror(objs, plane):
