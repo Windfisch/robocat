@@ -205,8 +205,8 @@ def arrange1d(solids):
 def make_horn_cutout():
     holes = Location((-8.5,0)) * SlotCenterToCenter(1.3, 2.1)
     holes += Location((8.5,0)) * SlotCenterToCenter(1.3, 2.1)
-    holes += Location((0,7)) * rot2d(90) * SlotCenterToCenter(1.3, 2.1)
-    holes += Location((0,-7)) * rot2d(90) * SlotCenterToCenter(1.3, 2.1)
+    #holes += Location((0,7)) * rot2d(90) * SlotCenterToCenter(1.3, 2.1)
+    #holes += Location((0,-7)) * rot2d(90) * SlotCenterToCenter(1.3, 2.1)
     holes += RRect(10, 7.7, 1)
     return holes
 
@@ -245,6 +245,31 @@ def make_body():
         -Rot((90,0,0))*extrude(Loc((42,-12)) * make_horn_cutout(), THICK)
         -Rot((90,0,0))*extrude(Loc((-42,-12)) * make_horn_cutout(), THICK)
     )
+
+    tri_sec3 = Loc((0, -LENGTH/2 + THICK, 0)) * Rot((0,90,0)) * extrude(
+        Rect(20,40+THICK, align = LH) - Rect(THICK, THICK, align=LH),
+        THICK/2,
+        both = True
+    )
+
+    plate_sec3 = Loc((0,-LENGTH/2-40, 0)) * (
+        Box(100, THICK, 20, align = CLH) -
+        Loc((42,0, -12)) * Box(THICK, THICK, THICK, align = CLC) -
+        Loc((-42,0, -12)) * Box(THICK, THICK, THICK, align = CLC)
+    )
+
+    tri_sec4 = Loc((0, LENGTH/2 - THICK, 0)) * Rot((0,90,0)) * extrude(
+        Rect(20,40+THICK, align = LL) - Rect(THICK, THICK, align=LL),
+        THICK/2,
+        both = True
+    )
+
+    plate_sec4 = Loc((0,LENGTH/2+40, 0)) * (
+        Box(100, THICK, 20, align = CHH) -
+        Loc((42,0, -12)) * Box(THICK, THICK, THICK, align = CHC) -
+        Loc((-42,0, -12)) * Box(THICK, THICK, THICK, align = CHC)
+    )
+
     #sec3 = Loc((0,-LENGTH/2,0)) * Box(120,THICK,40, align=CLH)
     #sec4 = Loc((0,LENGTH/2,0)) * Box(120,THICK,40, align=CHH)
     bottom = Loc((0,0,-40)) * Box(33, 80, 3, align=CCL)
@@ -259,10 +284,18 @@ def make_body():
     top, sec4 = auto_finger_joint(top, sec4, 12)
     sec1a, bottom = auto_finger_joint(sec1a, bottom, 12)
     sec1b, bottom = auto_finger_joint(sec1b, bottom, 12)
+    tri_sec3, sec3 = auto_finger_joint(tri_sec3, sec3, 5)
+    tri_sec3, plate_sec3 = auto_finger_joint(tri_sec3, plate_sec3, 5)
+    top, plate_sec3 = auto_finger_joint(top, plate_sec3, 5)
+    top, tri_sec3 = auto_finger_joint(top, tri_sec3, 5)
+    tri_sec4, sec4 = auto_finger_joint(tri_sec4, sec4, 5)
+    tri_sec4, plate_sec4 = auto_finger_joint(tri_sec4, plate_sec4, 5)
+    top, plate_sec4 = auto_finger_joint(top, plate_sec4, 5)
+    top, tri_sec4 = auto_finger_joint(top, tri_sec4, 5)
 
     head=Loc((0,-LENGTH/2 - 40, 30))* Sphere(40)
 
-    solids = [sec1a, sec1b, top, sec3, sec4, bottom]
+    solids = [sec1a, sec1b, top, sec3, sec4, bottom, tri_sec3, plate_sec3, tri_sec4, plate_sec4]
 
 
     joints = [
