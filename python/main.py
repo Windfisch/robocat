@@ -2,6 +2,8 @@ import machine
 from math import sin, cos, tan, atan, atan2, pi, sqrt, asin, acos
 import time
 import json
+import sys
+
 
 #pins = [machine.PWM(i, freq = 200, duty_ns = 1500_000) for i in range(12)]
 
@@ -33,6 +35,11 @@ class Servo:
 		self.duty_ns = int((self.center + angle / 90 * self.offset90) * 1000)
 		if self.pwm is not None:
 			self.pwm.duty_ns(self.duty_ns)
+	
+	def set_raw(self, duty_us):
+		self.duty_ns = int(duty_us * 1000)
+		if self.pwm is not None:
+			self.pwm.duty_ns(self.duty_ns)
 
 class ServoSafetyControllerProxy:
 	def __init__(self, servo_safety_controller, index):
@@ -41,6 +48,9 @@ class ServoSafetyControllerProxy:
 	
 	def set_angle(self, angle):
 		self.servo_safety_controller.set_angle(self.index, angle)
+
+	def force_enable(self):
+		self.servo_safety_controller.force_enable(self.index)
 
 class ServoSafetyController:
 	def __init__(self, servos):
@@ -51,6 +61,9 @@ class ServoSafetyController:
 	
 	def set_angle(self, servo, angle):
 		self.servos[servo].set_angle(angle)
+
+	def force_enable(self, index):
+		self.servos[index].enable()
 	
 	def loop(self):
 		now = time.ticks_ms()
@@ -60,6 +73,40 @@ class ServoSafetyController:
 			self.servos[self.n_servos_powered].enable()
 			self.n_servos_powered += 1
 			self.next_servo_powerup_time = time.ticks_add(now, 100)
+
+def servo_calib_one_value(servo, initial):
+	step = 64
+	value = initial
+	print("adjust rotation: 1-9 for step width, + or -, end with space")
+	while True:
+		servo.set_raw(value)
+		print(value)
+
+		cmd = sys.stdin.read(1)
+		if cmd >= '1' and cmd <= '9':
+			step = 2 ** (ord(cmd) - ord('1'))
+		if cmd == '+' or cmd == '=':
+			value += step
+		if cmd == '-':
+			value -= step
+		if cmd == ' ':
+			break
+
+	return value
+
+def servo_calib(servo):
+	servo.enable()
+	print("adjust center position")
+	center = servo_calib_one_value(servo, servo.center)
+	print("adjust any 90 deg position, or skip by pressing enter")
+	rot90 = servo_calib_one_value(servo, center)
+	if abs(rot90 - center) <= 100: # implausibly low, was probably skipped
+		print("skipped")
+	else:
+		servo.offset90 = abs(center-rot90)
+	servo.center = center
+
+
 
 class Leg:
 	def __init__(self, shoulder, upper, knee, shoulder_sign, upper_sign, knee_sign, side):
@@ -125,13 +172,47 @@ class Leg:
 		self.upper.set_angle(upper * self.upper_sign)
 		self.knee.set_angle(knee * self.knee_sign)
 
-ctrl = ServoSafetyController([Servo(i, 1500, 1000) for i in range(12)])
+	def force_power_on(self, x, y, z):
+		"""only for debugging, normally, servos should be powered on via SafetyController"""
+		self.pos(x, y, z)
+		self.shoulder.force_enable()
+		time.sleep(0.5)
+		self.upper.force_enable()
+		time.sleep(0.5)
+		self.knee.force_enable()
+
+
+servos = [Servo(i, 1500, 1000) for i in range(12)]
+
+try:
+	with open("calib.json", 'r') as file:
+		calib = json.load(file)
+
+		for s, c in zip(servos, calib):
+			s.center = c['center']
+			s.offset90 = c['offset90']
+
+		print("loaded %d calibs" % len(calib))
+except:
+	print("failed to calibrate servos, using defaults")
+
+print("Calibrate servos? y/n")
+if sys.stdin.read(1) == 'y':
+	for servo in servos:
+		servo_calib(servo)
+	
+	calib = [ {'center': s.center, 'offset90': s.offset90} for s in servos ]
+	with open("calib.json", 'w') as file:
+		json.dump(calib, file)
+	print("saved")
+
+ctrl = ServoSafetyController(servos)
 s = ctrl.proxies
 
-leg_fl = Leg(s[11], s[9], s[10], 1, -1, 1, FRONT)
-leg_fr = Leg(s[5], s[3], s[4], 1, 1, -1, FRONT)
-leg_rl = Leg(s[8], s[7], s[6], -1, -1, 1, REAR)
-leg_rr = Leg(s[2], s[0], s[1], -1, 1, -1, REAR)
+leg_fl = Leg(s[9], s[10], s[11], 1, -1, 1, FRONT)
+leg_fr = Leg(s[6], s[7], s[8], 1, 1, -1, FRONT)
+leg_rl = Leg(s[5], s[4], s[3], -1, -1, 1, REAR)
+leg_rr = Leg(s[2], s[1], s[0], -1, 1, -1, REAR)
 
 legs = [leg_fl, leg_fr, leg_rl, leg_rr]
 
@@ -187,16 +268,18 @@ def get_up(dt_ms = 25):
 		time.sleep(dt_ms / 1000)
 
 def walk(dt_ms = 25):
-	h = -120
-	step_h = 30
-	step_len = 50
+	h = -115
+	step_h = 40
+	step_len = 60
 
-	step_dur = 1500
-	for t in range(0,15000, dt_ms):
+	step_dur = 500
+	for t in range(0,10000, dt_ms):
 		
 		tt = (t / step_dur) % 4.0
 		leg = int(tt)
 		phase = tt % 1.0
+
+		phase2 = clamp((phase - 0.5) * 1.5 + 0.5, 0, 1)
 
 		xs = [-step_len/2] * 4
 		zs = [0] * 4
@@ -204,19 +287,30 @@ def walk(dt_ms = 25):
 		for i in range(0, leg):
 			xs[i] += step_len
 
-		xs[leg] = -step_len/2 * cos(phase * pi)
-		zs[leg] = step_h * sin(phase * pi)
+		xs[leg] = -step_len/2 * cos(phase2 * pi)
+		zs[leg] = step_h * sin(phase2 * pi)
 
-		#xmid = sum(xs)/4
-		#zmid = sum(zs)/4
-		#for i in range(4):
-		#	xs[i] -= xmid
-		#	zs[i] -= zmid
 		for i in range(4):
-			xs[i] -= tt / 4 * step_len
+			#xs[i] -= tt / 4 * step_len
+			xs[i] += 0.5*step_len
+		#xs[0] += -37/2
+		#xs[3] += 37/2
+
+		xmid = sum(xs)/4
+		zmid = sum(zs)/4
+		for i in range(4):
+			xs[i] -= xmid
+			#zs[i] -= zmid
+
+		lean_targets = [(-1, 1), (1, -1), (-1, -1), (1, 1)]
+		lean_x_factor = 20 * sin(phase * pi)
+		lean_y_factor = 20 * sin(phase * pi)
+
+		lean_x = lean_targets[leg][0] * lean_x_factor
+		lean_y = lean_targets[leg][1] * lean_y_factor
 
 		for l, x, z in zip([leg_fr, leg_rl, leg_fl, leg_rr], xs, zs):
-			l.pos(x, 0, z + h)
+			l.pos(x - lean_x, 0 - lean_y, z + h)
 
 		ctrl.loop()
 		time.sleep(dt_ms / 1000)
@@ -225,4 +319,4 @@ print("hello")
 #twerk(dt_ms=25)
 #get_up(dt_ms=25)
 
-walk()
+#walk()
