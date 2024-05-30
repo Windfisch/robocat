@@ -107,6 +107,32 @@ def servo_calib(servo):
 	servo.center = center
 
 
+class CurrentMeasuring:
+	def __init__(self, mux_a_pin, mux_b_pin):
+		self.a = mux_a_pin
+		self.b = mux_b_pin
+		self.next_index = 0
+		self.update_mux(self.next_index)
+
+		self.adcs = [machine.ADC(i) for i in [0,1,2]]
+
+		self.values = [0] * 12
+
+		FULL_PERIOD = 20
+		self.timer = machine.Timer(mode=machine.Timer.PERIODIC, period = int(FULL_PERIOD/4), callback = lambda t: self.timer_callback(t))
+
+	def timer_callback(self, t):
+		for i in range(3):
+			self.values[self.next_index*3 + i] = self.adcs[i].read_u16()
+
+		self.next_index = (self.next_index + 1) % 4
+		self.update_mux(self.next_index)
+
+	def update_mux(self, i):
+		self.a.value(i & 1 != 0)
+		self.b.value(i & 2 != 0)
+
+
 
 class Leg:
 	def __init__(self, shoulder, upper, knee, shoulder_sign, upper_sign, knee_sign, side):
@@ -214,7 +240,7 @@ leg_fr = Leg(s[6], s[7], s[8], 1, 1, -1, FRONT)
 leg_rl = Leg(s[5], s[4], s[3], -1, -1, 1, REAR)
 leg_rr = Leg(s[2], s[1], s[0], -1, 1, -1, REAR)
 
-legs = [leg_fl, leg_fr, leg_rl, leg_rr]
+legs = [leg_rr, leg_rl, leg_fr, leg_fl]
 
 def pos(x,y,z):
 	for leg in legs:
@@ -315,6 +341,36 @@ def walk(dt_ms = 25):
 		ctrl.loop()
 		time.sleep(dt_ms / 1000)
 print("hello")
+
+current_measuring = CurrentMeasuring(machine.Pin(19, mode=machine.Pin.OUT), machine.Pin(18, mode=machine.Pin.OUT))
+
+def level(ampl=0, freq=1/3):
+	offsets = [0]*4
+	CYCLE_TIME=0.01
+	phase = 0
+	while True:
+		phase += freq * CYCLE_TIME * 2 * 3.141592654
+		phase %= (2*3.141592654)
+		target = 100 + ampl*sin(phase)
+		time.sleep(CYCLE_TIME)
+		currents = [ sum(current_measuring.values[3*i:3*i+3]) for i in range(4) ]
+
+		avg_current = sum(currents)/4
+		current_diffs = [c - avg_current for c in currents]
+
+		offsets = [o- CYCLE_TIME * 0.03 * d for o,d in zip(offsets, current_diffs)]
+		offsets = [clamp(o, -40, 40) for o in offsets]
+		avg_offset = sum(offsets)/4
+		offsets = [o-avg_offset for o in offsets]
+		offsets = [clamp(o, -40, 40) for o in offsets]
+
+		print(currents, offsets)
+
+		for leg, off in zip(legs, offsets):
+			leg.pos(0,0,target+off)
+		
+		ctrl.loop()
+	
 
 #twerk(dt_ms=25)
 #get_up(dt_ms=25)
