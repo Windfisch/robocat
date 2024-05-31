@@ -3,6 +3,8 @@ from math import sin, cos, tan, atan, atan2, pi, sqrt, asin, acos
 import time
 import json
 import sys
+import mpu6050
+import fusion
 
 
 #pins = [machine.PWM(i, freq = 200, duty_ns = 1500_000) for i in range(12)]
@@ -364,13 +366,37 @@ def level(ampl=0, freq=1/3):
 		offsets = [o-avg_offset for o in offsets]
 		offsets = [clamp(o, -40, 40) for o in offsets]
 
+		offsets = [o * (0.00001 ** CYCLE_TIME) for o in offsets]
+
 		print(currents, offsets)
 
 		for leg, off in zip(legs, offsets):
 			leg.pos(0,0,target+off)
 		
 		ctrl.loop()
+
+
+class MotionTracker:
+	def __init__(self, imu):
+		self.imu = imu
+		self.fusion = fusion.Fusion()
+		self.timer = machine.Timer(mode=machine.Timer.PERIODIC, period = 10, callback = lambda t: self.timer_callback(t))
 	
+	def timer_callback(self, timer):
+		values = self.imu.get()
+		self.fusion.update_nomag(
+			[values['accel']['x'], values['accel']['y'], values['accel']['z']],
+			[values['gyro']['x'], values['gyro']['y'], values['gyro']['z']]
+		)
+	
+	def get(self):
+		return self.fusion.pitch, self.fusion.roll
+
+i2c = machine.I2C(0, scl=machine.Pin(21), sda=machine.Pin(20), freq=400000)
+imu = mpu6050.MPU6050(i2c)
+motion_tracker = MotionTracker(imu)
+
+
 
 #twerk(dt_ms=25)
 #get_up(dt_ms=25)
