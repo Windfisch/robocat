@@ -366,7 +366,7 @@ def level(ampl=0, freq=1/3):
 		offsets = [o-avg_offset for o in offsets]
 		offsets = [clamp(o, -40, 40) for o in offsets]
 
-		offsets = [o * (0.00001 ** CYCLE_TIME) for o in offsets]
+		#offsets = [o * (0.00001 ** CYCLE_TIME) for o in offsets]
 
 		print(currents, offsets)
 
