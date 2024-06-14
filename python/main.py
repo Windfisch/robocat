@@ -146,6 +146,8 @@ class Leg:
 		self.knee = knee
 		self.side = side
 
+	# FIXME: this is wrong. it assumes that the upper shoulder joint rotates along a point right above the paw.
+	# but it doesn't, it's inset by 1-2cm
 	def pos(self, x, y, z):
 		j1,j2,j3 = 28, 50, 66
 
@@ -243,6 +245,53 @@ leg_rl = Leg(s[5], s[4], s[3], -1, -1, 1, REAR)
 leg_rr = Leg(s[2], s[1], s[0], -1, 1, -1, REAR)
 
 legs = [leg_rr, leg_rl, leg_fr, leg_fl]
+
+LEG_RR = 0
+LEG_RL = 1
+LEG_FR = 2
+LEG_FL = 3
+
+def add3d(a, b):
+	return (a[i] + b[i] for i in range(3))
+
+#def matmul(m, v):
+#	return (m[
+
+
+# Coordinate systems:
+# "world coordinate system": kinda irrelevant because we don't know our absolute x,y position.
+# "gravity coordinate system": (0,0,0) is in the robots's center (center of the top wooden plate),
+#                              z = upwards (parallel to the gravity vector),
+#                              x = forward*, y = left (*: parallel to the horizontal plane)
+# "robot coordinate system": (0,0,0) is in the robot's center,
+#                             z = upwards (orthogonal to the robot's top plane)
+#                             x = forward**, y = left** (**: parallel to the robot's top plane)
+class Tetrapod:
+	def __init__(self, legs, xlen, ylen, default_z):
+		self.legs = legs
+		self.xlen = xlen
+		self.ylen = ylen
+		self.default_z = default_z
+
+	# paw positions are given in the gravity coordinate system but shifted so that
+	# every leg's preferred position is (0,0,0).
+	# pitch and roll are in degrees.
+	def pos_rel(self, positions, pitch, roll):
+		self.pos_abs(
+			self,
+			[
+				add3d(positions[LEG_RR], (-self.xlen/2, -self.ylen/2, self.default_z)),
+				add3d(positions[LEG_RL], (-self.xlen/2,  self.ylen/2, self.default_z)),
+				add3d(positions[LEG_FR], ( self.xlen/2, -self.ylen/2, self.default_z)),
+				add3d(positions[LEG_FL], ( self.xlen/2,  self.ylen/2, self.default_z)),
+			],
+			pitch, roll
+		)
+
+	# paw positions are given in the gravity coordinate system.
+	# pitch and roll are in degrees.
+	#def pos_abs(self, positions, pitch, roll):
+		
 
 def pos(x,y,z):
 	for leg in legs:
@@ -357,18 +406,30 @@ def level(ampl=0, freq=1/3):
 		time.sleep(CYCLE_TIME)
 		currents = [ sum(current_measuring.values[3*i:3*i+3]) for i in range(4) ]
 
+		desired_currents = [0]*4
+
+		pitch, roll = motion_tracker.get()
+		desired_pitch, desired_roll = 0,0
+		pitch_error, roll_error = (pitch - desired_pitch, roll - desired_roll)
+
+		LEVEL_FACTOR = 500
+		desired_currents[LEG_RR] += LEVEL_FACTOR * (-pitch_error + roll_error)
+		desired_currents[LEG_RL] += LEVEL_FACTOR * (-pitch_error - roll_error)
+		desired_currents[LEG_FR] += LEVEL_FACTOR * (pitch_error + roll_error)
+		desired_currents[LEG_FL] += LEVEL_FACTOR * (pitch_error - roll_error)
+
 		avg_current = sum(currents)/4
-		current_diffs = [c - avg_current for c in currents]
+		current_diffs = [c - avg_current - desired for (c,desired) in zip(currents, desired_currents)]
 
 		offsets = [o- CYCLE_TIME * 0.03 * d for o,d in zip(offsets, current_diffs)]
-		offsets = [clamp(o, -40, 40) for o in offsets]
+		offsets = [clamp(o, -30, 40) for o in offsets]
 		avg_offset = sum(offsets)/4
 		offsets = [o-avg_offset for o in offsets]
-		offsets = [clamp(o, -40, 40) for o in offsets]
+		offsets = [clamp(o, -30, 40) for o in offsets]
 
 		#offsets = [o * (0.00001 ** CYCLE_TIME) for o in offsets]
 
-		print(currents, offsets)
+		print(desired_currents, currents, offsets)
 
 		for leg, off in zip(legs, offsets):
 			leg.pos(0,0,target+off)
