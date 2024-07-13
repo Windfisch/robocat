@@ -24,6 +24,8 @@ set_defaults(black_edges=True, render_joints=True, render_edges=True, reset_came
 
 # %%
 
+servoconn_w, servoconn_h = 8.5, 4.5
+
 def servo():
     body_xlen = 23
     body_ylen = 12.5
@@ -180,6 +182,8 @@ def laserify(solid):
     if isinstance(solid, list):
         return [laserify(s) for s in solid]
 
+    show(solid)
+
     faces = solid.faces().sort_by(SortBy.AREA)
     top = faces[-1]
     bot = faces[-2]
@@ -187,7 +191,11 @@ def laserify(solid):
     sec = section(solid, section_by = Plane(top.center_location), height=thick/2)
     sec = top.center_location.inverse() * sec
 
-    sec = offset(sec, amount=BURN_WIDTH/2)
+    try:
+        sec = offset(sec, amount=BURN_WIDTH/2)
+    except:
+        print("WARNING: Failed to laserify solid, continuing but the part might not fit.")
+        sec.color="pink"
 
     return sec
 
@@ -209,6 +217,15 @@ def make_horn_cutout():
     #holes += Location((0,-7)) * rot2d(90) * SlotCenterToCenter(1.3, 2.1)
     holes += RRect(10, 7.7, 1)
     return holes
+
+def make_servo_cutout():
+    screw_spacing = 28
+
+    base = RRect(servo_xlen, servo_ylen, 0.5)
+    base += Loc((-screw_spacing/2,0)) * Circle(1.5/2)
+    base += Loc((+screw_spacing/2,0)) * Circle(1.5/2)
+    return base
+
 
 # %%
 
@@ -232,18 +249,44 @@ def make_body():
         - Loc((120/2, -LENGTH2/2, 0)) * Box(43,40,THICK, align=HLH)
         - Loc((-120/2, LENGTH2/2, 0)) * Box(43,40,THICK, align=LHH)
         - Loc((-120/2, -LENGTH2/2, 0)) * Box(43,40,THICK, align=LLH)
+
+        # holes for pcb
+        - Loc((82/2, 62/2, 0)) * Cylinder(3.4/2, THICK, align=CCH)
+        - Loc((-82/2, 62/2, 0)) * Cylinder(3.4/2, THICK, align=CCH)
+        - Loc((82/2, -62/2, 0)) * Cylinder(3.4/2, THICK, align=CCH)
+        - Loc((-82/2, -62/2, 0)) * Cylinder(3.4/2, THICK, align=CCH)
+
+        # holes for servo cables from bottom to top (3 each)
+        - Loc((55/2, 80/2, 0)) * Box(servoconn_w, servoconn_h, THICK, align=CCH)
+        - Loc((-55/2, 80/2, 0)) * Box(servoconn_w, servoconn_h, THICK, align=CCH)
+        - Loc((55/2, -80/2, 0)) * Box(servoconn_w, servoconn_h, THICK, align=CCH)
+        - Loc((-55/2, -80/2, 0)) * Box(servoconn_w, servoconn_h, THICK, align=CCH)
+
+        # holes for servo cables from top to bottom (2 each)
+        - Loc((50/2, 110/2, 0)) * Box(servoconn_h, servoconn_w, THICK, align=CCH)
+        - Loc((-50/2, 110/2, 0)) * Box(servoconn_h, servoconn_w, THICK, align=CCH)
+        - Loc((50/2, -110/2, 0)) * Box(servoconn_h, servoconn_w, THICK, align=CCH)
+        - Loc((-50/2, -110/2, 0)) * Box(servoconn_h, servoconn_w, THICK, align=CCH)
     )
+
+    round_r = 20/3
     sec3 = Loc((0,-LENGTH/2,0)) * (
-        Box(120,THICK,25, align=CLH)
+        #Box(120,THICK,25, align=CLH)
+        Rot(90,0,0) * extrude(
+            RRect(120,25, round_r, align=CH) + Rect(120,25/2, align=CH),
+            -THICK)
         +Box(33,THICK,40, align=CLH)
-        -Rot((90,0,0))*extrude(Loc((42,-12)) * make_horn_cutout(), -THICK)
-        -Rot((90,0,0))*extrude(Loc((-42,-12)) * make_horn_cutout(), -THICK)
+        -Rot((90,0,0))*extrude(Loc((42,-12)) * make_servo_cutout(), -THICK)
+        -Rot((90,0,0))*extrude(Loc((-42,-12)) * make_servo_cutout(), -THICK)
     )
     sec4 = Loc((0,LENGTH/2,0)) * (
-        Box(120,THICK,25, align=CHH)
+        Rot(90,0,0) * extrude(
+            RRect(120,25, round_r, align=CH) + Rect(120,25/2, align=CH),
+            THICK)
+        #Box(120,THICK,25, align=CHH)
         +Box(33,THICK,40, align=CHH)
-        -Rot((90,0,0))*extrude(Loc((42,-12)) * make_horn_cutout(), THICK)
-        -Rot((90,0,0))*extrude(Loc((-42,-12)) * make_horn_cutout(), THICK)
+        -Rot((90,0,0))*extrude(Loc((42,-12)) * make_servo_cutout(), THICK)
+        -Rot((90,0,0))*extrude(Loc((-42,-12)) * make_servo_cutout(), THICK)
     )
 
     tri_sec3 = Loc((0, -LENGTH/2 + THICK, 0)) * Rot((0,90,0)) * extrude(
@@ -252,11 +295,25 @@ def make_body():
         both = True
     )
 
-    plate_sec3 = Loc((0,-LENGTH/2-40, 0)) * (
-        Box(100, THICK, 20, align = CLH) -
-        Loc((42,0, -12)) * Box(THICK, THICK, THICK, align = CLC) -
-        Loc((-42,0, -12)) * Box(THICK, THICK, THICK, align = CLC)
+    def support_plate_2d(tol):
+        return (
+            RRect(90, 20, 20/3, align=CH) -
+            Loc((15,-12)) * Circle(3.4/2) -
+            Loc((-15,-12)) * Circle(3.4/2) - 
+            Loc((42-5.5, -12)) * Rect(THICK+tol, THICK+tol) -
+            Loc((-42+5.5, -12)) * Rect(THICK+tol, THICK+tol)
+        )
+
+
+    plate_sec3 = Loc((0,-LENGTH/2-40, 0)) * Rot(90,0,0) * extrude(
+        support_plate_2d(0.5),
+        -THICK
     )
+    plate2_sec3 = Loc((0,-LENGTH/2-40 - THICK-1, 0)) * Rot(90,0,0) * extrude(
+        support_plate_2d(0),
+        -THICK
+    )
+
 
     tri_sec4 = Loc((0, LENGTH/2 - THICK, 0)) * Rot((0,90,0)) * extrude(
         Rect(20,40+THICK, align = LL) - Rect(THICK, THICK, align=LL),
@@ -264,11 +321,23 @@ def make_body():
         both = True
     )
 
-    plate_sec4 = Loc((0,LENGTH/2+40, 0)) * (
-        Box(100, THICK, 20, align = CHH) -
-        Loc((42,0, -12)) * Box(THICK, THICK, THICK, align = CHC) -
-        Loc((-42,0, -12)) * Box(THICK, THICK, THICK, align = CHC)
+    plate_sec4 = Loc((0,LENGTH/2+40, 0)) * Rot(90,0,0) * extrude(
+        support_plate_2d(0.5),
+        THICK
     )
+    plate2_sec4 = Loc((0,LENGTH/2+40 + THICK+1, 0)) * Rot(90,0,0) * extrude(
+        support_plate_2d(0),
+        THICK
+    )
+
+    axes = [
+        Loc((x*(42-5.5), y*( LENGTH/2+40 + THICK+1 ), -12)) * Rot(90,0,0) * extrude(
+            Rect(THICK, THICK),
+            18*y
+        )
+        for x,y in [(-1,-1),(-1,1),(1,-1),(1,1)]
+    ]
+    for a in axes: a.color="violet"
 
     #sec3 = Loc((0,-LENGTH/2,0)) * Box(120,THICK,40, align=CLH)
     #sec4 = Loc((0,LENGTH/2,0)) * Box(120,THICK,40, align=CHH)
@@ -295,21 +364,33 @@ def make_body():
 
     head=Loc((0,-LENGTH/2 - 40, 30))* Sphere(40)
 
-    solids = [sec1a, sec1b, top, sec3, sec4, bottom, tri_sec3, plate_sec3, tri_sec4, plate_sec4]
+    solids = [sec1a, sec1b, top, sec3, sec4, bottom, tri_sec3, plate_sec3, tri_sec4, plate_sec4, plate2_sec3, plate2_sec4] + axes
 
 
     joints = [
-        RigidJoint("horn", sec3, Loc((42,-LENGTH/2, -12), (-90,0,0))),
-        RigidJoint("horn2", sec3, Loc((-42,-LENGTH/2, -12), (-90,0,0))),
-        RigidJoint("horn3", sec4, Loc((42,LENGTH/2, -12), (-90,180,0))),
-        RigidJoint("horn4", sec4, Loc((-42,LENGTH/2, -12), (-90,180,0))),
+        RigidJoint("horn", sec3, Loc((42,-LENGTH/2+THICK, -12), (90,0,0))),
+        RigidJoint("horn2", sec3, Loc((-42,-LENGTH/2+THICK, -12), (90,0,0))),
+        RigidJoint("horn3", sec4, Loc((42,LENGTH/2-THICK, -12), (90,180,0))),
+        RigidJoint("horn4", sec4, Loc((-42,LENGTH/2-THICK, -12), (90,180,0))),
     ]
 
     return solids, joints
 
 body_solids, body_joints = make_body()
 
-show(body_solids)
+pcb = (
+    Loc((0,0,5)) * extrude(RRect(90,70, 5, align=CC), 1.6)
+    + Loc((0,0,-THICK-2)) * (
+        Loc((82/2,62/2,0)) * Cylinder(2.5, 5+THICK+2, align=CCL) 
+        + Loc((-82/2,62/2,0)) * Cylinder(2.5, 5+THICK+2, align=CCL) 
+        + Loc((82/2,-62/2,0)) * Cylinder(2.5, 5+THICK+2, align=CCL) 
+        + Loc((-82/2,-62/2,0)) * Cylinder(2.5, 5+THICK+2, align=CCL)
+    )
+)
+pcb.color = "#8800ffb0"
+pcb.name="pcb"
+
+show(body_solids + [pcb])
 
 # %%
 
@@ -346,16 +427,8 @@ def servo_horn_mount():
 
     return r
 
-show(servo_horn_mount())
-# %%
+#show(servo_horn_mount())
 
-def make_servo_cutout():
-    screw_spacing = 28
-
-    base = RRect(servo_xlen, servo_ylen, 0.5)
-    base += Loc((-screw_spacing/2,0)) * Circle(1.5/2)
-    base += Loc((+screw_spacing/2,0)) * Circle(1.5/2)
-    return base
 
 
 def servo_hip_mount():
@@ -366,7 +439,7 @@ def servo_hip_mount():
 
     
     base = Loc((-d,0)) * (RRect(d + servo_xlen + 5, servo_ylen + yextra, round, align = LC) + Rect(round + 0.1, servo_ylen + yextra, align = LC))
-    base -= Loc((servo_xlen/2,0)) * make_servo_cutout()
+    base -= Loc((servo_xlen/2,0)) * make_horn_cutout()
 
     base = extrude(base, THICK)
 
@@ -376,12 +449,12 @@ def servo_hip_mount():
     tri1_loc = Vector(joint_loc + (0,THICK/2,0))
     tri2_loc = tri1_loc.__copy__()
     tri2_loc.Y *= -1
-    servo_loc = Vector(servo_xlen/2, 0, THICK)
+    servo_loc = Vector(servo_xlen/2, 0, 0)
 
     RigidJoint("attach", base, Loc(joint_loc, (0,90,90)))
     RigidJoint("tri1", base, Loc(tri1_loc, (90,0,0)))
     RigidJoint("tri2", base, Loc(tri2_loc, (90,0,0)))
-    RigidJoint("servo", base, Loc(servo_loc, (180,0,0)))
+    RigidJoint("servo", base, Loc(servo_loc, (0,0,0)))
 
     return base
 
@@ -400,15 +473,15 @@ def tri():
         - Loc((-tol, ylen-2*tol)) * Rect(THICK, tol, align = HL)
     )
     tri = Loc((tol, tol)) * tri
+    tri = tri - Loc((xlen/2+5.5, 6)) * Rect(servoconn_w, servoconn_h)
+
     tri = extrude(tri, THICK/2, both=True)
     j = RigidJoint("attach", tri, Loc((-THICK,-THICK,0), (0,0,0)))
 
     return tri
 
 
-axis_offcenter = 5.5
-
-backplate = extrude(Rect(24,25, align = LL) - Loc((24/2,12 + servo_xlen/2 - axis_offcenter)) * Circle(3.2 * sqrt(2) / 2 ) , 3) 
+backplate = extrude(Rect(24,33, align = LL) - Loc((24/2,12 + servo_xlen/2)) * Circle(3.2 * sqrt(2) / 2 ) , 3) 
 RigidJoint("attach", backplate, Loc((0,0,0),(90,180,0)))
 
 
@@ -425,12 +498,10 @@ horn_top = servo_horn()
 knee_servo = servo()
 knee_horn = servo_horn()
 
+body_joints[0].connect_to(servo1.joints['mount'])
+servo1.joints['horn_master'].connect_to(horn_top.joints['slave'], angle=180)
+horn_top.joints['mount'].connect_to(hip_upper.joints['servo'])
 
-
-body_joints[0].connect_to(horn_top.joints['mount'])
-
-horn_top.joints['master'].connect_to(servo1.joints['horn_slave'], angle=180)
-servo1.joints['mount'].connect_to(hip_upper.joints['servo'])
 hip_upper.joints['attach'].connect_to(hip_lower.joints['hip_servo_mount'])
 hip_lower.joints['knee_servo_horn'].connect_to(horn1.joints['mount'], angle=0)
 
@@ -439,7 +510,7 @@ hip_lower.joints['servo_backplate'].connect_to(backplate.joints['attach'])
 hip_upper.joints['tri1'].connect_to(hip_tri1.joints['attach'])
 hip_upper.joints['tri2'].connect_to(hip_tri2.joints['attach'])
 
-show([horn_top, servo1, hip_tri1, hip_tri2, hip_upper, hip_lower, backplate])
+show([body_solids, horn_top, servo1, hip_tri1, hip_tri2, hip_upper, hip_lower, backplate, pcb])
 
 # %%
 
@@ -533,6 +604,6 @@ part2d = arrange1d(laserify(body_solids + hip_parts + [uleg, lleg]))
 exporter = ExportSVG(scale=1)
 exporter.add_layer("Visible")
 exporter.add_shape(part2d, layer="Visible")
-exporter.write("part_projection.svg")
+exporter.write("robocat_mk2.svg")
 
 
