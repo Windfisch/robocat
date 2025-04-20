@@ -1,5 +1,5 @@
 import machine
-from math import sin, cos, tan, atan, atan2, pi, sqrt, asin, acos
+from math import sin, cos, tan, atan, atan2, pi, sqrt, asin, acos, exp
 import time
 import json
 import sys
@@ -80,6 +80,12 @@ def servo_calib_one_value(servo, initial):
 	step = 64
 	value = initial
 	print("adjust rotation: 1-9 for step width, + or -, end with space")
+	for i in range(3):
+		servo.set_raw(value+50)
+		time.sleep(.1)
+		servo.set_raw(value)
+		time.sleep(.1)
+
 	while True:
 		servo.set_raw(value)
 		print(value)
@@ -395,16 +401,48 @@ print("hello")
 
 current_measuring = CurrentMeasuring(machine.Pin(19, mode=machine.Pin.OUT), machine.Pin(18, mode=machine.Pin.OUT))
 
+class LowPassFilter:
+	def __init__(self, time_constant):
+		self.time_constant = time_constant
+		self.accu = None
+
+	def update(self, value):
+		if self.accu is None:
+			self.accu = value
+
+		self.accu = self.accu * exp(-1/self.time_constant) + value * (1 - exp(-1/self.time_constant))
+
+		return self.accu
+	
+	def value(self):
+		return self.accu
+
+class HighPassFilter:
+	def __init__(self, time_constant):
+		self.lp = LowPassFilter(time_constant)
+	
+	def update(self, value):
+		self.value = value - self.lp.update(value)
+		return self.value
+	
+	def value(self):
+		return self.value
+
 def level(ampl=0, freq=1/3):
 	offsets = [0]*4
 	CYCLE_TIME=0.01
 	phase = 0
+
+	hp_pitch = HighPassFilter(1 / CYCLE_TIME)
+	hp_roll = HighPassFilter(1 / CYCLE_TIME)
+
 	while True:
 		phase += freq * CYCLE_TIME * 2 * 3.141592654
 		phase %= (2*3.141592654)
 		target = 100 + ampl*sin(phase)
 		time.sleep(CYCLE_TIME)
-		currents = [ sum(current_measuring.values[3*i:3*i+3]) for i in range(4) ]
+		#currents = [ sum(current_measuring.values[3*i:3*i+3]) for i in range(4) ]
+		currents = [0]*4
 
 		desired_currents = [0]*4
 
@@ -412,7 +450,13 @@ def level(ampl=0, freq=1/3):
 		desired_pitch, desired_roll = 0,0
 		pitch_error, roll_error = (pitch - desired_pitch, roll - desired_roll)
 
-		LEVEL_FACTOR = 500
+		dpitch, droll = hp_pitch.update(pitch), hp_roll.update(roll)
+
+		xpos = 0.7*dpitch
+		ypos = 1*droll
+
+		LEVEL_FACTOR = 800
+		#LEVEL_FACTOR = 0
 		desired_currents[LEG_RR] += LEVEL_FACTOR * (-pitch_error + roll_error)
 		desired_currents[LEG_RL] += LEVEL_FACTOR * (-pitch_error - roll_error)
 		desired_currents[LEG_FR] += LEVEL_FACTOR * (pitch_error + roll_error)
@@ -429,10 +473,10 @@ def level(ampl=0, freq=1/3):
 
 		#offsets = [o * (0.00001 ** CYCLE_TIME) for o in offsets]
 
-		print(desired_currents, currents, offsets)
+		print(desired_currents, currents, offsets, dpitch, droll)
 
 		for leg, off in zip(legs, offsets):
-			leg.pos(0,0,target+off)
+			leg.pos(xpos,ypos,target+off)
 		
 		ctrl.loop()
 
