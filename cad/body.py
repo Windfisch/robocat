@@ -98,7 +98,7 @@ def servo_horn():
 
 # %%
 
-BURN_WIDTH=0.15
+BURN_WIDTH=0.11
 THICK = 3.1
 servo_xlen = 23
 servo_ylen = 12.0
@@ -122,7 +122,7 @@ def auto_finger_joint(
         b: Part,
         min_finger_width: float,
         swap: bool = False,
-        finger_type: FingerType = None
+        finger_type: FingerType = FingerType.ODD
     ) -> tuple[Part, Part]:
 
     # We're operating on the intersection of the two parts
@@ -460,7 +460,7 @@ def servo_hip_mount():
 
 def tri():
     xlen = 30
-    ylen = 23
+    ylen = 22.8
     tol = 3
     
     tri = (
@@ -481,7 +481,7 @@ def tri():
     return tri
 
 
-backplate = extrude(Rect(24,33, align = LL) - Loc((24/2,12 + servo_xlen/2)) * Circle(3.2 * sqrt(2) / 2 ) , 3) 
+backplate = extrude(Rect(24,33, align = LL) - Loc((24/2,12 + servo_xlen/2)) * Circle(3.2 * sqrt(2) / 2 ) , THICK) 
 RigidJoint("attach", backplate, Loc((0,0,0),(90,180,0)))
 
 
@@ -559,7 +559,7 @@ finger = auto_finger_joint
 
 hip_lower, hip_upper = finger(hip_lower, hip_upper, 3)
 hip_lower, hip_tri1 = finger(hip_lower, hip_tri1, 3, swap=True)
-hip_lower, hip_tri2 = finger(hip_lower, hip_tri2, 3, swap=False)
+hip_lower, hip_tri2 = finger(hip_lower, hip_tri2, 3, swap=True)
 hip_upper, hip_tri1 = finger(hip_upper, hip_tri1, 3, swap=True)
 hip_upper, hip_tri2 = finger(hip_upper, hip_tri2, 3, swap=True)
 
@@ -569,6 +569,7 @@ hip_tri2, backplate = finger(hip_tri2, backplate, 3)
 
 hip_lower.color='red'
 hip_upper.color='blue'
+backplate.color='olive'
 
 hip_lower.name = 'leg_servo_horn'
 hip_upper.name = 'hip_servo_mount'
@@ -589,15 +590,16 @@ def my_mirror(objs, plane):
 leg_assembly2 = my_mirror(leg_assembly, Plane.XZ)
 leg_assembly3 = my_mirror(leg_assembly, Plane.YZ)
 leg_assembly4 = my_mirror(leg_assembly2, Plane.YZ)
-
+# %%
 
 show(body_solids, leg_assembly, leg_assembly2, leg_assembly3, leg_assembly4)
 
 # %%
 
-hip_parts = [hip_lower, hip_upper, hip_tri1, hip_tri2]
+hip_parts = [hip_lower, hip_upper, hip_tri1, hip_tri2, backplate]
 
-part2d = arrange1d(laserify(body_solids + hip_parts + [uleg, lleg]))
+#part2d = arrange1d(laserify(body_solids + 4*(hip_parts + [uleg, lleg])))
+part2d = arrange1d(laserify(body_solids+ 4*hip_parts))
 
 #show(part2d)
 
