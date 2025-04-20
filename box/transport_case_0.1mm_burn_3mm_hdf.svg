@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="586.02875mm"
+   viewBox="0 0 592.49803 586.02873"
+   width="592.49805mm"
+   version="1.1"
+   id="svg31"
+   sodipodi:docname="box4c.svg"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs31" />
+  <sodipodi:namedview
+     id="namedview31"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.24426024"
+     inkscape:cx="1918.0363"
+     inkscape:cy="998.93458"
+     inkscape:window-width="1916"
+     inkscape:window-height="1041"
+     inkscape:window-x="0"
+     inkscape:window-y="18"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg31" />
+  <!--
+TwoPiece - A two piece box where top slips over the bottom half to form the enclosure.
+
+
+
+Set *hi* larger than *h* to leave gap between the inner and outer shell. This can be used to make opening the box easier. Set *hi* smaller to only have a small inner ridge that will allow the content to be more visible after opening.
+
+![Bottom view](static/samples/TwoPiece2.jpg)
+
+
+
+Created with Boxes.py (https://boxes.hackerspace-bamberg.de/)
+Creation date: 2025-04-18 21:29:18
+Command line (remove spaces between dashes): boxes TwoPiece - -FingerJoint_finger=5 - -FingerJoint_space=5 - -x=123 - -y=245 - -h=121 - -outside=0
+Url: https://boxes.hackerspace-bamberg.de/TwoPiece?FingerJoint_style=rectangular&FingerJoint_surroundingspaces=2.0&FingerJoint_bottom_lip=0.0&FingerJoint_edge_width=1.0&FingerJoint_extra_length=0.0&FingerJoint_finger=5&FingerJoint_play=0.0&FingerJoint_space=5&FingerJoint_width=1.0&x=123&y=245&h=121&hi=0.0&outside=0&play=0.15&thickness=3.0&format=svg&tabs=0.0&qr_code=0&debug=0&labels=0&labels=1&reference=100.0&inner_corners=loop&burn=0.1&language=en&render=2
+Url short: https://boxes.hackerspace-bamberg.de/TwoPiece?FingerJoint_finger=5&FingerJoint_space=5&x=123&y=245&h=121&outside=0
+SettingsUrl: https://boxes.hackerspace-bamberg.de/TwoPiece?FingerJoint_style=rectangular&FingerJoint_surroundingspaces=2.0&FingerJoint_bottom_lip=0.0&FingerJoint_edge_width=1.0&FingerJoint_extra_length=0.0&FingerJoint_finger=5&FingerJoint_play=0.0&FingerJoint_space=5&FingerJoint_width=1.0&x=123&y=245&h=121&hi=0.0&outside=0&play=0.15&thickness=3.0&format=svg&tabs=0.0&qr_code=0&debug=0&labels=0&labels=1&reference=100.0&inner_corners=loop&burn=0.1&language=en&render=2
+SettingsUrl short: https://boxes.hackerspace-bamberg.de/TwoPiece?FingerJoint_finger=5&FingerJoint_space=5&x=123&y=245&h=121&outside=0
+-->
+  <title
+     id="title1">TwoPiece</title>
+  <metadata
+     id="metadata1">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:title>TwoPiece</dc:title>
+        <dc:date>2025-04-18 21:29:18</dc:date>
+        <dc:source>https://boxes.hackerspace-bamberg.de/TwoPiece?FingerJoint_style=rectangular&amp;FingerJoint_surroundingspaces=2.0&amp;FingerJoint_bottom_lip=0.0&amp;FingerJoint_edge_width=1.0&amp;FingerJoint_extra_length=0.0&amp;FingerJoint_finger=5&amp;FingerJoint_play=0.0&amp;FingerJoint_space=5&amp;FingerJoint_width=1.0&amp;x=123&amp;y=245&amp;h=121&amp;hi=0.0&amp;outside=0&amp;play=0.15&amp;thickness=3.0&amp;format=svg&amp;tabs=0.0&amp;qr_code=0&amp;debug=0&amp;labels=0&amp;labels=1&amp;reference=100.0&amp;inner_corners=loop&amp;burn=0.1&amp;language=en&amp;render=2</dc:source>
+        <dc:source>https://boxes.hackerspace-bamberg.de/TwoPiece?FingerJoint_finger=5&amp;FingerJoint_space=5&amp;x=123&amp;y=245&amp;h=121&amp;outside=0</dc:source>
+        <dc:description>A two piece box where top slips over the bottom half to form the enclosure.
+
+
+Set *hi* larger than *h* to leave gap between the inner and outer shell. This can be used to make opening the box easier. Set *hi* smaller to only have a small inner ridge that will allow the content to be more visible after opening.
+
+![Bottom view](static/samples/TwoPiece2.jpg)
+
+
+Created with Boxes.py (https://boxes.hackerspace-bamberg.de/)
+Command line: boxes TwoPiece --FingerJoint_style=rectangular --FingerJoint_surroundingspaces=2.0 --FingerJoint_bottom_lip=0.0 --FingerJoint_edge_width=1.0 --FingerJoint_extra_length=0.0 --FingerJoint_finger=5 --FingerJoint_play=0.0 --FingerJoint_space=5 --FingerJoint_width=1.0 --x=123 --y=245 --h=121 --hi=0.0 --outside=0 --play=0.15 --thickness=3.0 --format=svg --tabs=0.0 --qr_code=0 --debug=0 --labels=0 --labels=1 --reference=100.0 --inner_corners=loop --burn=0.1
+Command line short: boxes TwoPiece --FingerJoint_finger=5 --FingerJoint_space=5 --x=123 --y=245 --h=121 --outside=0
+Url: https://boxes.hackerspace-bamberg.de/TwoPiece?FingerJoint_style=rectangular&amp;FingerJoint_surroundingspaces=2.0&amp;FingerJoint_bottom_lip=0.0&amp;FingerJoint_edge_width=1.0&amp;FingerJoint_extra_length=0.0&amp;FingerJoint_finger=5&amp;FingerJoint_play=0.0&amp;FingerJoint_space=5&amp;FingerJoint_width=1.0&amp;x=123&amp;y=245&amp;h=121&amp;hi=0.0&amp;outside=0&amp;play=0.15&amp;thickness=3.0&amp;format=svg&amp;tabs=0.0&amp;qr_code=0&amp;debug=0&amp;labels=0&amp;labels=1&amp;reference=100.0&amp;inner_corners=loop&amp;burn=0.1&amp;language=en&amp;render=2
+Url short: https://boxes.hackerspace-bamberg.de/TwoPiece?FingerJoint_finger=5&amp;FingerJoint_space=5&amp;x=123&amp;y=245&amp;h=121&amp;outside=0
+SettingsUrl: https://boxes.hackerspace-bamberg.de/TwoPiece?FingerJoint_style=rectangular&amp;FingerJoint_surroundingspaces=2.0&amp;FingerJoint_bottom_lip=0.0&amp;FingerJoint_edge_width=1.0&amp;FingerJoint_extra_length=0.0&amp;FingerJoint_finger=5&amp;FingerJoint_play=0.0&amp;FingerJoint_space=5&amp;FingerJoint_width=1.0&amp;x=123&amp;y=245&amp;h=121&amp;hi=0.0&amp;outside=0&amp;play=0.15&amp;thickness=3.0&amp;format=svg&amp;tabs=0.0&amp;qr_code=0&amp;debug=0&amp;labels=0&amp;labels=1&amp;reference=100.0&amp;inner_corners=loop&amp;burn=0.1&amp;language=en&amp;render=2
+SettingsUrl short: https://boxes.hackerspace-bamberg.de/TwoPiece?FingerJoint_finger=5&amp;FingerJoint_space=5&amp;x=123&amp;y=245&amp;h=121&amp;outside=0
+</dc:description>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="g2"
+     transform="translate(86.80406,78.985851)">
+    <g
+       id="p-1"
+       style="fill:none;stroke:#ff0000;stroke-linecap:round;stroke-linejoin:round"
+       transform="translate(308.89056,-174.10249)">
+      <path
+         d="M 13.1,516.5 H 37 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 H 67 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 H 97 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 23.9 3 c 0.055,0 0.1,-0.045 0.1,-0.1 v -23 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -23 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -3 -123 -3 c -0.055,0 -0.1,0.045 -0.1,0.1 v 23 c 0,0.055 0.045,0.1 0.1,0.1 H 13 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 H 13 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 H 13 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 23 c 0,0.055 0.045,0.1 0.1,0.1 z"
+         stroke="#000000"
+         stroke-width="0.2"
+         id="path2"
+         style="stroke:#ff0000" />
+    </g>
+    <g
+       id="p-3"
+       style="fill:none;stroke:#ff0000;stroke-linecap:round;stroke-linejoin:round"
+       transform="translate(-469.44353,-45.412092)">
+      <path
+         d="m 396.5,516.5 h 23.9 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 23.9 3 c 0.055,0 0.1,-0.045 0.1,-0.1 v -23 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -23 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -3 -123 -3 c -0.055,0 -0.1,0.045 -0.1,0.1 v 23 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 23 c 0,0.055 0.045,0.1 0.1,0.1 z"
+         stroke="#000000"
+         stroke-width="0.2"
+         id="path4"
+         style="stroke:#ff0000" />
+    </g>
+    <g
+       id="p-4"
+       style="fill:none;stroke:#ff0000;stroke-linecap:round;stroke-linejoin:round"
+       transform="translate(-464.69393,-44.411308)">
+      <path
+         d="m 527.2,516.5 h 24.9 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 24.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -22.9 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -22.9 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -245 c -0.055,0 -0.1,0.045 -0.1,0.1 v 22.9 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 22.9 c 0,0.055 0.045,0.1 0.1,0.1 z"
+         stroke="rgb(0,0,0)"
+         stroke-width="0.2"
+         id="path5"
+         style="stroke:#ff0000" />
+    </g>
+    <g
+       id="p-5"
+       style="fill:none;stroke:#ff0000;stroke-linecap:round;stroke-linejoin:round"
+       transform="translate(304.39624,78.974502)">
+      <path
+         d="m 13.1,390.8 h 27.35 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 27.35 3 c 0.055,0 0.1,-0.045 0.1,-0.1 v -23 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -23 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -3 -129.9 -3 c -0.055,0 -0.1,0.045 -0.1,0.1 v 23 c 0,0.055 0.045,0.1 0.1,0.1 H 13 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 H 13 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 H 13 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 23 c 0,0.055 0.045,0.1 0.1,0.1 z"
+         stroke="#000000"
+         stroke-width="0.2"
+         id="path6"
+         style="stroke:#ff0000" />
+    </g>
+    <g
+       id="p-7"
+       style="fill:none;stroke:#ff0000;stroke-linecap:round;stroke-linejoin:round"
+       transform="translate(-491.77399,-46.577713)">
+      <path
+         d="m 410.3,390.8 h 27.35 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 27.35 3 c 0.055,0 0.1,-0.045 0.1,-0.1 v -23 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -23 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -3 -129.9 -3 c -0.055,0 -0.1,0.045 -0.1,0.1 v 23 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 23 c 0,0.055 0.045,0.1 0.1,0.1 z"
+         stroke="#000000"
+         stroke-width="0.2"
+         id="path8"
+         style="stroke:#ff0000" />
+    </g>
+    <g
+       id="p-8"
+       style="fill:none;stroke:#ff0000;stroke-linecap:round;stroke-linejoin:round"
+       transform="translate(-491.77399,-46.577713)">
+      <path
+         d="m 547.9,390.8 h 28.35 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 28.35 c 0.055,0 0.1,-0.045 0.1,-0.1 v -22.9 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -22.9 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 H 547.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 22.9 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 22.9 c 0,0.055 0.045,0.1 0.1,0.1 z"
+         stroke="#000000"
+         stroke-width="0.2"
+         id="path9"
+         style="stroke:#ff0000" />
+    </g>
+    <path
+       id="rect51"
+       style="fill:none;stroke:#ff0000;stroke-width:0.264583;stroke-linejoin:round"
+       d="m 503.51625,221.14644 h -48.00017 -3.10007 v 14.9996 h 3.10007 v 16.10031 h -3.10007 v 15.00012 h 3.10007 v 16.09979 h -3.10007 v 15.00012 h 3.10007 v 6.54999 h 20.00005 v 2.99981 h -20.00005 v 6.54999 h -3.10007 v 15.00012 h 3.10007 v 16.09979 h -3.10007 v 15.00012 h 3.10007 v 16.09979 h -3.10007 v 15.00012 h 3.10007 48.00017 v -9.99939 h -9.99991 V 231.14634 h 9.99991 z"
+       sodipodi:nodetypes="ccccccccccccccccccccccccccccccccccc" />
+    <path
+       id="rect52"
+       style="fill:none;stroke:#ff0000;stroke-width:0.264583;stroke-linejoin:round"
+       d="M 505.56172,408.64272 H 457.56206 454.462 v 15.00011 h 3.10006 v 23.49986 H 454.462 v 15.00012 h 3.10006 47.99966 v -9.99991 h -9.99991 V 436.89319 H 477.5619 v -2.99982 h 17.99991 v -15.25023 h 9.99991 z"
+       sodipodi:nodetypes="ccccccccccccccccccc" />
+  </g>
+  <g
+     id="g1"
+     transform="translate(63.79625,61.51657)">
+    <g
+       id="p-2"
+       style="fill:none;stroke:#ff0000;stroke-linecap:round;stroke-linejoin:round"
+       transform="translate(-194.99271,-308.67023)">
+      <path
+         d="m 143.8,516.5 h 24.9 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 24.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -22.9 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -22.9 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -245 c -0.055,0 -0.1,0.045 -0.1,0.1 v 22.9 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 22.9 c 0,0.055 0.045,0.1 0.1,0.1 z"
+         stroke="#000000"
+         stroke-width="0.2"
+         id="path3"
+         style="stroke:#ff0000" />
+    </g>
+    <g
+       id="p-6"
+       style="fill:none;stroke:#ff0000;stroke-linecap:round;stroke-linejoin:round"
+       transform="translate(-209.16618,-329.9931)">
+      <path
+         d="m 150.7,390.8 h 28.35 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 28.35 c 0.055,0 0.1,-0.045 0.1,-0.1 v -22.9 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -22.9 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 H 150.7 c -0.055,0 -0.1,0.045 -0.1,0.1 v 22.9 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 22.9 c 0,0.055 0.045,0.1 0.1,0.1 z"
+         stroke="#000000"
+         stroke-width="0.2"
+         id="path7"
+         style="stroke:#ff0000" />
+    </g>
+    <g
+       id="p-9"
+       style="fill:none;stroke:#ff0000;stroke-linecap:round;stroke-linejoin:round"
+       transform="rotate(90,270.3351,198.91853)">
+      <path
+         d="m 48.05,264.45 h -7.4 c -0.1,0 0,0.1 0,0 v -2.8 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.8 c 0,0.1 0.1,0 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path10"
+         style="stroke:#ff0000" />
+      <path
+         d="m 78.05,264.45 h -7.4 c -0.1,0 0,0.1 0,0 v -2.8 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.8 c 0,0.1 0.1,0 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path11"
+         style="stroke:#ff0000" />
+      <path
+         d="m 108.05,264.45 h -7.4 c -0.1,0 0,0.1 0,0 v -2.8 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.8 c 0,0.1 0.1,0 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path12"
+         style="stroke:#ff0000" />
+      <path
+         d="m 16.55,268.1 h 123 6.45 c 0.055,0 0.1,-0.045 0.1,-0.1 v -6.45 -245 -6.45 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -6.45 -123 -6.45 C 10.045,10 10,10.045 10,10.1 v 6.45 245 6.45 c 0,0.055 0.045,0.1 0.1,0.1 z"
+         stroke="#000000"
+         stroke-width="0.2"
+         id="path13"
+         style="stroke:#ff0000" />
+      <path
+         d="m 142.45,229.05 v 7.4 c 0,0.1 0.1,0 0,0 h -2.8 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.8 c 0.1,0 0,-0.1 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path14"
+         style="stroke:#ff0000" />
+      <path
+         d="m 142.45,199.05 v 7.4 c 0,0.1 0.1,0 0,0 h -2.8 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.8 c 0.1,0 0,-0.1 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path15"
+         style="stroke:#ff0000" />
+      <path
+         d="m 142.45,169.05 v 7.4 c 0,0.1 0.1,0 0,0 h -2.8 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.8 c 0.1,0 0,-0.1 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path16"
+         style="stroke:#ff0000" />
+      <path
+         d="m 142.45,139.05 v 7.4 c 0,0.1 0.1,0 0,0 h -2.8 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.8 c 0.1,0 0,-0.1 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path17"
+         style="stroke:#ff0000" />
+      <path
+         d="m 142.45,109.05 v 7.4 c 0,0.1 0.1,0 0,0 h -2.8 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.8 c 0.1,0 0,-0.1 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path18"
+         style="stroke:#ff0000" />
+      <path
+         d="m 142.45,79.05 v 7.4 c 0,0.1 0.1,0 0,0 h -2.8 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.8 c 0.1,0 0,-0.1 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path19"
+         style="stroke:#ff0000" />
+      <path
+         d="m 142.45,49.05 v 7.4 c 0,0.1 0.1,0 0,0 h -2.8 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.8 c 0.1,0 0,-0.1 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path20"
+         style="stroke:#ff0000" />
+      <path
+         d="m 108.05,13.65 h 7.4 c 0.1,0 0,-0.1 0,0 v 2.8 c 0,0.1 0.1,0 0,0 h -14.8 c -0.1,0 0,0.1 0,0 v -2.8 c 0,-0.1 -0.1,0 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path21"
+         style="stroke:#ff0000" />
+      <path
+         d="m 78.05,13.65 h 7.4 c 0.1,0 0,-0.1 0,0 v 2.8 c 0,0.1 0.1,0 0,0 h -14.8 c -0.1,0 0,0.1 0,0 v -2.8 c 0,-0.1 -0.1,0 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path22"
+         style="stroke:#ff0000" />
+      <path
+         d="m 48.05,13.65 h 7.4 c 0.1,0 0,-0.1 0,0 v 2.8 c 0,0.1 0.1,0 0,0 h -14.8 c -0.1,0 0,0.1 0,0 v -2.8 c 0,-0.1 -0.1,0 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path23"
+         style="stroke:#ff0000" />
+      <path
+         d="m 13.65,49.05 v -7.4 c 0,-0.1 -0.1,0 0,0 h 2.8 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.8 c -0.1,0 0,0.1 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path24"
+         style="stroke:#ff0000" />
+      <path
+         d="m 13.65,79.05 v -7.4 c 0,-0.1 -0.1,0 0,0 h 2.8 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.8 c -0.1,0 0,0.1 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path25"
+         style="stroke:#ff0000" />
+      <path
+         d="m 13.65,109.05 v -7.4 c 0,-0.1 -0.1,0 0,0 h 2.8 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.8 c -0.1,0 0,0.1 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path26"
+         style="stroke:#ff0000" />
+      <path
+         d="m 13.65,139.05 v -7.4 c 0,-0.1 -0.1,0 0,0 h 2.8 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.8 c -0.1,0 0,0.1 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path27"
+         style="stroke:#ff0000" />
+      <path
+         d="m 13.65,169.05 v -7.4 c 0,-0.1 -0.1,0 0,0 h 2.8 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.8 c -0.1,0 0,0.1 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path28"
+         style="stroke:#ff0000" />
+      <path
+         d="m 13.65,199.05 v -7.4 c 0,-0.1 -0.1,0 0,0 h 2.8 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.8 c -0.1,0 0,0.1 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path29"
+         style="stroke:#ff0000" />
+      <path
+         d="m 13.65,229.05 v -7.4 c 0,-0.1 -0.1,0 0,0 h 2.8 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.8 c -0.1,0 0,0.1 0,0 z"
+         stroke="#0000ff"
+         stroke-width="0.2"
+         id="path30"
+         style="stroke:#ff0000" />
+    </g>
+    <g
+       id="p-10"
+       style="fill:none;stroke:#ff0000;stroke-linecap:round;stroke-linejoin:round"
+       transform="rotate(90,270.3351,198.91853)">
+      <path
+         d="m 150.7,268.1 h 27.45 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 15 c 0.055,0 0.1,-0.045 0.1,-0.1 v -2.9 c 0,-0.1 -0.1,0 0,0 h 14.8 c 0.1,0 0,-0.1 0,0 v 2.9 c 0,0.055 0.045,0.1 0.1,0.1 h 27.45 3 c 0.055,0 0.1,-0.045 0.1,-0.1 v -3 -28.45 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -15 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -2.9 c -0.1,0 0,0.1 0,0 v -14.8 c 0,-0.1 -0.1,0 0,0 h 2.9 c 0.055,0 0.1,-0.045 0.1,-0.1 v -28.45 -3 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -3 -27.45 c -0.055,0 -0.1,0.045 -0.1,0.1 V 13 c 0,0.1 0.1,0 0,0 h -14.8 c -0.1,0 0,0.1 0,0 v -2.9 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -15 c -0.055,0 -0.1,0.045 -0.1,0.1 V 13 c 0,0.1 0.1,0 0,0 h -14.8 c -0.1,0 0,0.1 0,0 v -2.9 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -15 c -0.055,0 -0.1,0.045 -0.1,0.1 V 13 c 0,0.1 0.1,0 0,0 h -14.8 c -0.1,0 0,0.1 0,0 v -2.9 c 0,-0.055 -0.045,-0.1 -0.1,-0.1 h -27.45 -3 c -0.055,0 -0.1,0.045 -0.1,0.1 v 3 28.45 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 15 c 0,0.055 0.045,0.1 0.1,0.1 h 2.9 c 0.1,0 0,-0.1 0,0 v 14.8 c 0,0.1 0.1,0 0,0 h -2.9 c -0.055,0 -0.1,0.045 -0.1,0.1 v 28.45 3 c 0,0.055 0.045,0.1 0.1,0.1 z"
+         stroke="#000000"
+         stroke-width="0.2"
+         id="path31"
+         style="stroke:#ff0000" />
+    </g>
+    <g
+       id="g73"
+       transform="translate(129.14363,-265.75657)"
+       style="stroke:#ff0000">
+      <g
+         id="g70"
+         transform="translate(-185.51001,82.252231)"
+         style="stroke:#ff0000">
+        <rect
+           style="fill:none;stroke:#ff0000;stroke-width:0.264583;stroke-linejoin:round"
+           id="rect65"
+           width="15"
+           height="3.0999999"
+           x="301.32001"
+           y="188.58778" />
+        <rect
+           style="fill:none;stroke:#ff0000;stroke-width:0.264583;stroke-linejoin:round"
+           id="rect66"
+           width="15"
+           height="3.0999999"
+           x="332.42001"
+           y="188.58778" />
+        <rect
+           style="fill:none;stroke:#ff0000;stroke-width:0.264583;stroke-linejoin:round"
+           id="rect67"
+           width="15"
+           height="3.0999999"
+           x="363.52002"
+           y="188.58778" />
+        <rect
+           style="fill:none;stroke:#ff0000;stroke-width:0.264583;stroke-linejoin:round"
+           id="rect68"
+           width="15"
+           height="3.0999999"
+           x="394.62"
+           y="188.58778" />
+        <rect
+           style="fill:none;stroke:#ff0000;stroke-width:0.264583;stroke-linejoin:round"
+           id="rect69"
+           width="15"
+           height="3.0999999"
+           x="425.72"
+           y="188.58778" />
+        <rect
+           style="fill:none;stroke:#ff0000;stroke-width:0.264583;stroke-linejoin:round"
+           id="rect70"
+           width="15"
+           height="3.0999999"
+           x="456.82001"
+           y="188.58778" />
+      </g>
+      <g
+         id="g72"
+         transform="rotate(90,208.00654,153.71842)"
+         style="stroke:#ff0000">
+        <rect
+           style="fill:none;stroke:#ff0000;stroke-width:0.264583;stroke-linejoin:round"
+           id="rect71"
+           width="15"
+           height="3.0999999"
+           x="299.92813"
+           y="159.11496" />
+        <rect
+           style="fill:none;stroke:#ff0000;stroke-width:0.264583;stroke-linejoin:round"
+           id="rect72"
+           width="15"
+           height="3.0999999"
+           x="338.42813"
+           y="159.11496" />
+      </g>
+    </g>
+  </g>
+  <g
+     id="g3"
+     transform="translate(34.626149,723.57935)">
+    <text
+       dominant-baseline="hanging"
+       font-size="6px"
+       style="font-style:normal;font-weight:normal;font-family:sans-serif;fill:#0000ff;stroke:none;stroke-linecap:round;stroke-linejoin:round"
+       text-anchor="middle"
+       id="text1"
+       x="1.4778553"
+       y="-148.04721">100.0mm, burn:0.10mm</text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.64444px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:none;stroke:#0000ff;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="48.357449"
+       y="-152.99289"
+       id="text31"><tspan
+         sodipodi:role="line"
+         style="font-size:5.64444px;fill:#0000ff;stroke:none;stroke-width:0.264583px"
+         x="48.357449"
+         y="-152.99289"
+         id="tspan33">https://boxes.hackerspace-bamberg.de/TwoPiece?FingerJoint_style=rectangular&amp;FingerJoint_surroundingspaces=2.0&amp;FingerJoint_bottom_lip=0.0&amp;FingerJoint_edge_width=1.0&amp;</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:5.64444px;fill:#0000ff;stroke:none;stroke-width:0.264583px"
+         x="48.357449"
+         y="-145.93733"
+         id="tspan34">FingerJoint_extra_length=0.0&amp;FingerJoint_finger=5&amp;FingerJoint_play=0.0&amp;FingerJoint_space=5&amp;FingerJoint_width=1.0&amp;x=123&amp;y=245&amp;h=121&amp;hi=0.0&amp;outside=0&amp;play=0.15&amp;</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:5.64444px;fill:#0000ff;stroke:none;stroke-width:0.264583px"
+         x="48.357449"
+         y="-138.88179"
+         id="tspan35">thickness=3.0&amp;format=svg&amp;tabs=0.0&amp;qr_code=0&amp;debug=0&amp;labels=0&amp;labels=1&amp;reference=100.0&amp;inner_corners=loop&amp;burn=0.1&amp;language=en&amp;render=0</tspan></text>
+  </g>
+</svg>
