@@ -6,6 +6,7 @@ import sys
 if len(sys.argv) >= 2:
 	ser = serial.Serial(sys.argv[1], timeout=0)
 else:
+	print("No serial device given, entering dummy mode")
 	ser = None
 
 if ser is not None:
@@ -61,7 +62,7 @@ base_z = 120
 
 sleep_x = 15
 sleep_y = 0
-sleep_z = 60
+sleep_z = 65
 
 selected_leg = None
 
@@ -116,7 +117,11 @@ while True:
 		leg_x.update(leg_x_raw)
 	else:
 		selected_leg = None
-	
+
+	axis6 = -1 if (buttons[13], buttons[14]) == (True, False) else 1 if (buttons[13], buttons[14]) == (False, True) else 0
+	base_y += axis6 *0.5
+	#base_x += js.get_axis(6) * 0.1
+	print("base_y = ",base_y)
 
 	xs = [base_x * leg_sign_x(i) + 70*lean_x.get() for i in range(4)]
 	ys = [base_y * leg_sign_y(i) + 70*lean_y.get() for i in range(4)]
