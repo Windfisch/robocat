@@ -28,6 +28,7 @@ class Fusion(object):
     '''
     Class provides sensor fusion allowing heading, pitch and roll to be extracted. This uses the Madgwick algorithm.
     The update method must be called peiodically. The calculations take 1.6mS on the Pyboard.
+    yaw-pitch-roll are given as Tait-Bryan angles in Body-3-2-1 convention.
     '''
     declination = 0                         # Optional offset for true north. A +ve value adds to heading
     def __init__(self, timediff=None):

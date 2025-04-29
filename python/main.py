@@ -5,6 +5,9 @@ import json
 import sys
 import mpu6050
 import fusion
+import stdinreader
+from filters import HighPassFilter, LowPassFilter
+from pid_controller import PidController
 
 
 #pins = [machine.PWM(i, freq = 200, duty_ns = 1500_000) for i in range(12)]
@@ -75,6 +78,19 @@ class ServoSafetyController:
 			self.servos[self.n_servos_powered].enable()
 			self.n_servos_powered += 1
 			self.next_servo_powerup_time = time.ticks_add(now, 100)
+
+class ConstantFrameTime:
+	def __init__(self, frame_time_ms):
+		self._frame_time_ms = frame_time_ms
+		self._last_frame_start_ms = time.ticks_ms()
+	
+	def wait(self):
+		now = time.ticks_ms()
+		wait_ms = max(0, self._last_frame_start_ms + self._frame_time_ms - now)
+		if wait_ms <= 0:
+			print("Frame time violation! Frame took %4.2fms but was supposed to take %4.2fms" % (now - self._last_frame_start_ms, self._frame_time_ms))
+		time.sleep(wait_ms / 1000)
+		self._last_frame_start_ms = now
 
 def servo_calib_one_value(servo, initial):
 	step = 64
@@ -251,6 +267,8 @@ leg_rl = Leg(s[5], s[4], s[3], -1, -1, 1, REAR)
 leg_rr = Leg(s[2], s[1], s[0], -1, 1, -1, REAR)
 
 legs = [leg_rr, leg_rl, leg_fr, leg_fl]
+leg_sign_x = [-1, -1, +1, +1]
+leg_sign_y = [+1, -1, +1, -1]
 
 LEG_RR = 0
 LEG_RL = 1
@@ -401,33 +419,6 @@ print("hello")
 
 current_measuring = CurrentMeasuring(machine.Pin(19, mode=machine.Pin.OUT), machine.Pin(18, mode=machine.Pin.OUT))
 
-class LowPassFilter:
-	def __init__(self, time_constant):
-		self.time_constant = time_constant
-		self.accu = None
-
-	def update(self, value):
-		if self.accu is None:
-			self.accu = value
-
-		self.accu = self.accu * exp(-1/self.time_constant) + value * (1 - exp(-1/self.time_constant))
-
-		return self.accu
-	
-	def value(self):
-		return self.accu
-
-class HighPassFilter:
-	def __init__(self, time_constant):
-		self.lp = LowPassFilter(time_constant)
-	
-	def update(self, value):
-		self.value = value - self.lp.update(value)
-		return self.value
-	
-	def value(self):
-		return self.value
-
 def level(ampl=0, freq=1/3):
 	offsets = [0]*4
 	CYCLE_TIME=0.01
@@ -479,6 +470,149 @@ def level(ampl=0, freq=1/3):
 			leg.pos(xpos,ypos,target+off)
 		
 		ctrl.loop()
+
+def step_curve(t):
+	MOVE=0.33
+	HOLD=0.0
+	if t < MOVE: return 0.5 - cos(t/MOVE*pi)/2, 1
+	t-=MOVE
+	if t < HOLD: return 1, 2
+	t-=HOLD
+	if t < MOVE: return 0.5 + cos(t/MOVE*pi)/2, 3
+	return 0, 0
+
+def w2():
+	with open("log.csv", "w") as f:
+		walk2(f)
+
+def walk2(file = None):
+	r = stdinreader.StdinReader()
+	v = {
+		'x1': 0,
+		'y1': 0,
+		'z1': 80,
+		'x2': 0,
+		'y2': 0,
+		'z2': 100,
+		'pR': 0,
+		'iR': 0.2,
+		'ilR': 999,
+		'dR': 0,
+		'angle': 45,
+		'basex': 0,
+		'basey': 0,
+	}
+
+	R1controller = PidController(0,0,0)
+	R2controller = PidController(0,0,0)
+
+	FRAME_TIME = 20 # ms
+
+	frametime = ConstantFrameTime(FRAME_TIME)
+	R1highpass = HighPassFilter(20 / FRAME_TIME)
+	R2highpass = HighPassFilter(20 / FRAME_TIME)
+
+	diag1 = [LEG_FL, LEG_RR]
+	diag2 = [LEG_RL, LEG_FR]
+
+	# ideally, this should be the vector from the RR to the FL leg (normalized)
+	angle_x = cos(v['angle'] / 180 * pi)
+	angle_y = sin(v['angle'] / 180 * pi)
+
+	if file: file.write("# " + "\t".join(["$%d=%s" % (i, x) for (i, x) in enumerate(['time_ms', 'step', 'step_phase', 'inhibit_i', 'pitch', 'roll', 'tilt', 'error', 'ctrl', 'ctrl_i_accu'])]) + "\n")
+
+	while True:
+		ctrl.loop()
+		frametime.wait()
+
+		step, step_phase = step_curve((time.ticks_ms()/1000) % 1.0)
+		v['z1'] = 100 - 20*step
+
+		inhibit_i = 0 if step_phase in {1, 2} else 1
+
+
+		line = r.getline()
+		if line:
+			for (variable, value) in [stmt.split('=') for stmt in line.replace(' ','').split(';')]:
+				if variable in v:
+					try:
+						v[variable] = float(value)
+					except ValueError:
+						pass
+			
+			# ideally, this should be the vector from the RR to the FL leg (normalized)
+			angle_x = cos(v['angle'] / 180 * pi)
+			angle_y = sin(v['angle'] / 180 * pi)
+
+		
+		R1controller.p = v['pR']
+		R1controller.i = v['iR']
+		R1controller.i_limit = v['ilR']
+		R1controller.d = v['dR']
+		R2controller.p = v['pR']
+		R2controller.i = v['iR']
+		R2controller.i_limit = v['ilR']
+		R2controller.d = v['dR']
+
+		pitch, roll = motion_tracker.get()
+		#print(pitch, roll)
+		pitch = pitch / 180 * pi
+		roll = roll / 180 * pi
+
+		if abs(v['z1'] - v['z2']) < 0.1:
+			# standing on all four legs
+			# update no controller
+			error = 0
+			tilt = 0
+			R1highpass.reset()
+			R2highpass.reset()
+		elif v['z1'] < v['z2']:
+			# diag1's legs are lifted, diag2 is standing on the ground
+			axis_x, axis_y = angle_x, angle_y
+
+			# now we'll take (axis_x, axis_y, 0)^T in the robot frame ("XYZ") and rotate it into the
+			# world frame ("xyz") by multiplying:  R_z(0) * R_y(pitch) * R_x(roll) * (axis_x, axis_y, 0)^T
+
+			# ( cos p      sin r sin p   cos r sin p )   (  axis_x  )
+			# (  0         cos r        -sin r       ) * (  axis_y  )
+			# ( -sin p     sin r cos p   cos p cos r )   (  0       )
+
+			# and compute the scalar product with (0,0,1)^T
+			# this is cos( 90deg + tilt ), where tilt is the tilt angle against the horizontal (rotating across the standing two legs, ideally)
+			# positive tilt means that the axis is pointing downwards, i.e. that our center of gravity is too far in the direction of the axis
+			# and needs to move away
+			tilt = acos( -sin(pitch)*axis_x + sin(roll)*cos(pitch)*axis_y ) * 180 / pi  -  90
+			
+			#print('tilt', tilt)
+			error = R1highpass.update(tilt)
+			R2controller.update(error, inhibit_i)
+			print(tilt, error, inhibit_i)
+		elif v['z1'] > v['z2']:
+			# diag2's legs are lifted, diag1 is standing on the ground
+			axis_x, axis_y = -angle_x, angle_y
+			tilt = acos( -sin(pitch)*axis_x + sin(roll)*cos(pitch)*axis_y ) * 180 / pi  -  90
+			error = R2highpass.update(tilt)
+			R1controller.update(error, inhibit_i)
+
+		if file: file.write(f"{time.ticks_ms()}\t{step}\t{step_phase}\t{inhibit_i}\t{pitch*180/pi}\t{roll*180/pi}\t{tilt*180/pi}\t{error*180/pi}\t{R2controller.value()}\t{R2controller.i_accumulator}\n")
+
+		#print(R1controller.value(), R2controller.value())
+		for i in diag1:
+			axis_x, axis_y = -angle_x, angle_y
+			x = v['basex'] * leg_sign_x[i] + v['x1'] + axis_x * R1controller.value()
+			y = v['basey'] * leg_sign_y[i] + v['y1'] - axis_y * R1controller.value()
+			z = v['z1']
+			#print("leg #%d:  %5.2f  %5.2f  %5.2f" % (i,x,y,z))
+			legs[i].pos(x,y,z)
+		
+		for i in diag2:
+			axis_x, axis_y = angle_x, angle_y
+			x = v['basex'] * leg_sign_x[i] + v['x2'] + axis_x * R2controller.value()
+			y = v['basey'] * leg_sign_y[i] + v['y2'] - axis_y * R2controller.value()
+			z = v['z2']
+			#print("leg #%d:  %5.2f  %5.2f  %5.2f" % (i,x,y,z))
+			legs[i].pos(x,y,z)
+		
 
 
 class MotionTracker:

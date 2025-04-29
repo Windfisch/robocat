@@ -65,9 +65,10 @@ sleep_slow = LowpassFilter(0.97)
 
 LEG_MAP={0:0, 1:1, 2:1, 3:0}
 
-# answer "no" to "calibrate servos?"
-ser.write("n\r\n".encode('ascii'))
-ser.read(9999)
+if ser is not None:
+	# answer "no" to "calibrate servos?"
+	ser.write("n\r\n".encode('ascii'))
+	ser.read(9999)
 
 while True:
 	time.sleep(1/50)
@@ -113,6 +114,9 @@ while True:
 	for i, name in [(LEG_FL, 'fl'), (LEG_FR, 'fr'), (LEG_RL, 'rl'), (LEG_RR, 'rr')]:
 		print("Leg %s: %-6.3f  %-6.3f  %-6.3f" % (f"[{name}]" if False else f" {name} " , xs[i], ys[i], zs[i]))
 
+	print()
+	print()
+
 	if ser is not None:
 		line = ""
 		for i, name in [(LEG_FL, 'fl'), (LEG_FR, 'fr'), (LEG_RL, 'rl'), (LEG_RR, 'rr')]:
@@ -120,6 +124,3 @@ while True:
 		line += '\r\nctrl.loop()\r\n'
 		ser.write(line.encode('ascii'))
 		ser.read(9999)
-
-	print()
-	print()
