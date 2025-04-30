@@ -495,7 +495,7 @@ def walk2(file = None):
 		'y2': 0,
 		'z2': 100,
 		'pR': 0,
-		'iR': 0.5,
+		'iR': 0.2,
 		'ilR': 999,
 		'dR': 0,
 		'angle': 45,
@@ -527,9 +527,6 @@ def walk2(file = None):
 
 		step, step_phase = step_curve((time.ticks_ms()/1000) % 1.0)
 		v['z1'] = 100 - 20*step
-
-		inhibit_i = 0 if step_phase in {1, 2} else 1
-
 
 		line = r.getline()
 		if line:
@@ -566,6 +563,7 @@ def walk2(file = None):
 			tilt = 0
 			R1highpass.reset()
 			R2highpass.reset()
+			inhibit_i = 1
 		elif v['z1'] < v['z2']:
 			# diag1's legs are lifted, diag2 is standing on the ground
 			axis_x, axis_y = angle_x, angle_y
@@ -582,9 +580,11 @@ def walk2(file = None):
 			# positive tilt means that the axis is pointing downwards, i.e. that our center of gravity is too far in the direction of the axis
 			# and needs to move away
 			tilt = acos( -sin(pitch)*axis_x + sin(roll)*cos(pitch)*axis_y ) * 180 / pi  -  90
-			
-			#print('tilt', tilt)
 			error = R1highpass.update(tilt)
+			
+			inhibit_i = (abs(tilt) < 3) or (tilt*error < 0) # don't update the integral part if we're rotating towards the level/good position
+			inhibit_i = 1 if inhibit_i else 0
+			
 			R2controller.update(error, inhibit_i)
 			print(tilt, error, inhibit_i)
 		elif v['z1'] > v['z2']:
@@ -592,9 +592,13 @@ def walk2(file = None):
 			axis_x, axis_y = -angle_x, angle_y
 			tilt = acos( -sin(pitch)*axis_x + sin(roll)*cos(pitch)*axis_y ) * 180 / pi  -  90
 			error = R2highpass.update(tilt)
+			
+			inhibit_i = (abs(tilt) < 3) or (tilt*error < 0) # don't update the integral part if we're rotating towards the level/good position
+			inhibit_i = 1 if inhibit_i else 0
+			
 			R1controller.update(error, inhibit_i)
 
-		if file: file.write(f"{time.ticks_ms()}\t{step}\t{step_phase}\t{inhibit_i}\t{pitch*180/pi}\t{roll*180/pi}\t{tilt*180/pi}\t{error*180/pi}\t{R2controller.value()}\t{R2controller.i_accumulator}\n")
+		if file: file.write(f"{time.ticks_ms()}\t{step}\t{step_phase}\t{inhibit_i}\t{pitch*180/pi}\t{roll*180/pi}\t{tilt}\t{error}\t{R2controller.value()}\t{R2controller.i_accumulator}\n")
 
 		#print(R1controller.value(), R2controller.value())
 		for i in diag1:
