@@ -481,6 +481,14 @@ def step_curve(t):
 	if t < MOVE: return 0.5 + cos(t/MOVE*pi)/2, 3
 	return 0, 0
 
+def step2_curve(t):
+	HOLD=0.13
+	MOVE=0.40
+	if t < HOLD: return 0
+	t-=HOLD
+	if t < MOVE: return 0.5 - cos(t/MOVE*pi)/2
+	return 1
+
 def w2():
 	with open("log.csv", "w") as f:
 		walk2(f)
@@ -494,8 +502,8 @@ def walk2(file = None):
 		'x2': 0,
 		'y2': 0,
 		'z2': 100,
-		'pR': 0,
-		'iR': 0.2,
+		'pR': 1,
+		'iR': 0.075,
 		'ilR': 999,
 		'dR': 0,
 		'angle': 45,
@@ -519,14 +527,34 @@ def walk2(file = None):
 	angle_x = cos(v['angle'] / 180 * pi)
 	angle_y = sin(v['angle'] / 180 * pi)
 
-	if file: file.write("# " + "\t".join(["$%d=%s" % (i, x) for (i, x) in enumerate(['time_ms', 'step', 'step_phase', 'inhibit_i', 'pitch', 'roll', 'tilt', 'error', 'ctrl', 'ctrl_i_accu'])]) + "\n")
+	if file: file.write("# " + "\t".join(["$%d=%s" % (i, x) for (i, x) in enumerate(['time_ms', 'step', 'step_phase', 'inhibit_i', 'pitch', 'roll', 'tilt', 'error', 'ctrl', 'ctrl2_i_accu', 'ctrl1_i_accu', 'x1', 'x2'])]) + "\n")
+
+	step1=0
+	step2=0
+
+	velocity = 40
 
 	while True:
 		ctrl.loop()
 		frametime.wait()
 
-		step, step_phase = step_curve((time.ticks_ms()/1000) % 1.0)
-		v['z1'] = 100 - 20*step
+		step_t = (time.ticks_ms() / 1000) % 2.0
+		if step_t >= 1.0:
+			step2, _ = step_curve(step_t-1)
+			x1 = 1
+			x2 = step2_curve(step_t-1)
+		else:
+			step1, _ = step_curve(step_t)
+			x1 = step2_curve(step_t)
+			x2 = 0
+		x1 -=  step_t/2
+		x2 -=  step_t/2
+
+		v['z1'] = 100 - 20*step1
+		v['z2'] = 100 - 20*step2
+
+		v['x1'] = velocity * x1
+		v['x2'] = velocity * x2
 
 		line = r.getline()
 		if line:
@@ -582,7 +610,7 @@ def walk2(file = None):
 			tilt = acos( -sin(pitch)*axis_x + sin(roll)*cos(pitch)*axis_y ) * 180 / pi  -  90
 			error = R1highpass.update(tilt)
 			
-			inhibit_i = (abs(tilt) < 3) or (tilt*error < 0) # don't update the integral part if we're rotating towards the level/good position
+			inhibit_i = (abs(tilt) < 2) or (tilt*error < 0) # don't update the integral part if we're rotating towards the level/good position
 			inhibit_i = 1 if inhibit_i else 0
 			
 			R2controller.update(error, inhibit_i)
@@ -593,12 +621,12 @@ def walk2(file = None):
 			tilt = acos( -sin(pitch)*axis_x + sin(roll)*cos(pitch)*axis_y ) * 180 / pi  -  90
 			error = R2highpass.update(tilt)
 			
-			inhibit_i = (abs(tilt) < 3) or (tilt*error < 0) # don't update the integral part if we're rotating towards the level/good position
+			inhibit_i = (abs(tilt) < 2) or (tilt*error < 0) # don't update the integral part if we're rotating towards the level/good position
 			inhibit_i = 1 if inhibit_i else 0
 			
 			R1controller.update(error, inhibit_i)
 
-		if file: file.write(f"{time.ticks_ms()}\t{step}\t{step_phase}\t{inhibit_i}\t{pitch*180/pi}\t{roll*180/pi}\t{tilt}\t{error}\t{R2controller.value()}\t{R2controller.i_accumulator}\n")
+		if file: file.write(f"{time.ticks_ms()}\t{step1}\t{step2}\t{inhibit_i}\t{pitch*180/pi}\t{roll*180/pi}\t{tilt}\t{error}\t{R2controller.value()}\t{R2controller.i_accumulator}\t{R1controller.i_accumulator}\t{x1}\t{x2}\n")
 
 		#print(R1controller.value(), R2controller.value())
 		for i in diag1:
