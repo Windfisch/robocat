@@ -495,7 +495,7 @@ def walk2(file = None):
 		'y2': 0,
 		'z2': 100,
 		'pR': 0,
-		'iR': 0.2,
+		'iR': 0.5,
 		'ilR': 999,
 		'dR': 0,
 		'angle': 45,
@@ -509,8 +509,8 @@ def walk2(file = None):
 	FRAME_TIME = 20 # ms
 
 	frametime = ConstantFrameTime(FRAME_TIME)
-	R1highpass = HighPassFilter(20 / FRAME_TIME)
-	R2highpass = HighPassFilter(20 / FRAME_TIME)
+	R1highpass = HighPassFilter(30 / FRAME_TIME)
+	R2highpass = HighPassFilter(30 / FRAME_TIME)
 
 	diag1 = [LEG_FL, LEG_RR]
 	diag2 = [LEG_RL, LEG_FR]
