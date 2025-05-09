@@ -472,7 +472,8 @@ def level(ampl=0, freq=1/3):
 		ctrl.loop()
 
 def step_curve(t):
-	MOVE=0.33
+	#MOVE=0.33
+	MOVE=0.5
 	HOLD=0.0
 	if t < MOVE: return 0.5 - cos(t/MOVE*pi)/2, 1
 	t-=MOVE
@@ -482,8 +483,8 @@ def step_curve(t):
 	return 0, 0
 
 def step2_curve(t):
-	HOLD=0.13
-	MOVE=0.40
+	HOLD=0.15
+	MOVE=0.70
 	if t < HOLD: return 0
 	t-=HOLD
 	if t < MOVE: return 0.5 - cos(t/MOVE*pi)/2
@@ -532,13 +533,13 @@ def walk2(file = None):
 	step1=0
 	step2=0
 
-	velocity = 40
+	velocity = 60
 
 	while True:
 		ctrl.loop()
 		frametime.wait()
 
-		step_t = (time.ticks_ms() / 1000) % 2.0
+		step_t = (time.ticks_ms() / 300) % 2.0
 		if step_t >= 1.0:
 			step2, _ = step_curve(step_t-1)
 			x1 = 1
@@ -550,8 +551,8 @@ def walk2(file = None):
 		x1 -=  step_t/2
 		x2 -=  step_t/2
 
-		v['z1'] = 100 - 20*step1
-		v['z2'] = 100 - 20*step2
+		v['z1'] = 100 - 10*step1
+		v['z2'] = 100 - 10*step2
 
 		v['x1'] = velocity * x1
 		v['x2'] = velocity * x2
