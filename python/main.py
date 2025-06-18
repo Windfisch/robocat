@@ -490,11 +490,11 @@ def step2_curve(t):
 	if t < MOVE: return 0.5 - cos(t/MOVE*pi)/2
 	return 1
 
-def w2():
+def w2(velocity = 60, step_height = 10, step_time=300):
 	with open("log.csv", "w") as f:
-		walk2(f)
+		walk2(velocity, step_height, step_time, file=f)
 
-def walk2(file = None):
+def walk2(velocity = 60, step_height = 10, step_time=300, file = None):
 	r = stdinreader.StdinReader()
 	v = {
 		'x1': 0,
@@ -533,13 +533,11 @@ def walk2(file = None):
 	step1=0
 	step2=0
 
-	velocity = 60
-
 	while True:
 		ctrl.loop()
 		frametime.wait()
 
-		step_t = (time.ticks_ms() / 300) % 2.0
+		step_t = (time.ticks_ms() / step_time) % 2.0
 		if step_t >= 1.0:
 			step2, _ = step_curve(step_t-1)
 			x1 = 1
@@ -551,8 +549,8 @@ def walk2(file = None):
 		x1 -=  step_t/2
 		x2 -=  step_t/2
 
-		v['z1'] = 100 - 10*step1
-		v['z2'] = 100 - 10*step2
+		v['z1'] = 100 - step_height*step1
+		v['z2'] = 100 - step_height*step2
 
 		v['x1'] = velocity * x1
 		v['x2'] = velocity * x2
