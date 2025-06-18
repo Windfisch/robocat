@@ -2,7 +2,7 @@ anytree==2.12.1
 asttokens==2.4.1
 build123d @ git+https://github.com/Windfisch/build123d@154c1eba410a4bbf0a0d6bfde3200a8b9ec1d798
 cachetools==5.2.1
-cadquery-ocp==7.7.2
+cadquery-ocp>=7.7.2
 certifi==2024.2.2
 charset-normalizer==3.3.2
 comm==0.2.2
